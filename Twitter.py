@@ -34,7 +34,7 @@ api = tw.API(auth, wait_on_rate_limit=True)
 
 
 # Define the search term and the date_since date as variables
-search_words = "#ประยุทธ์"
+search_words = "#คิวเท"
 date_since = "2022-03-01"
 
 
