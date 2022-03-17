@@ -1,6 +1,5 @@
 import scrapy
-
-
+#cmd scrapy runspider NintendoClawler.py -O nintentop_100list.json
 ##nintendo top 100 game
 class NintendoShopCrawler(scrapy.Spider):
     name = 'nintendo'
