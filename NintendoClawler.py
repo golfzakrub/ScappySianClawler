@@ -1,7 +1,7 @@
 import scrapy
 
 
-
+##nintendo top 100 game
 class NintendoShopCrawler(scrapy.Spider):
     name = 'nintendo'
     start_urls = ['https://www.switchscores.com/top-rated/all-time']
