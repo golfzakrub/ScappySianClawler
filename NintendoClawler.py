@@ -23,6 +23,7 @@ class NintendoShopCrawler(scrapy.Spider):
                 
 
             }
+            
 
         next_page = response.css('span.next a::attr("href")').getall()[-1]
         if next_page is not None:
