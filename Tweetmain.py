@@ -10,12 +10,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import  QSortFilterProxyModel
 import pandas as pd
-from tweetManager import TweepyManager as twM
+
+from pandasModel import pandasModel 
+from tweet_Manager import TweepyManager as twM
+from data import  dataManager
 
 class Ui_mainWindow(object):
     def __init__(self):
         self.twM = twM()
+        self.dtM = dataManager()
 
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
@@ -169,7 +174,7 @@ class Ui_mainWindow(object):
         self.progressBar.setAutoFillBackground(False)
         self.progressBar.setStyleSheet("background-color:#ffdb4a")
         self.progressBar.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
-        self.progressBar.setProperty("value", 43)
+        self.progressBar.setProperty("value", 100)
         self.progressBar.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.progressBar.setTextVisible(True)
         self.progressBar.setOrientation(QtCore.Qt.Horizontal)
@@ -185,13 +190,13 @@ class Ui_mainWindow(object):
         self.Search = QtWidgets.QPushButton(self.centralwidget)
         self.Search.setGeometry(QtCore.QRect(240, 40, 75, 23))
         self.Search.setObjectName("Search")
-        self.Search.clicked.connect(lambda :self.twM.search_for_hashtags(self.textEdit.toPlainText()))
+        self.Search.clicked.connect(lambda :self.createTable(self.textEdit.toPlainText()))
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 211, 16))
         self.label.setObjectName("label")
-        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(10, 140, 651, 531))
-        self.tableWidget.setObjectName("TableWidget")
+        self.tableView = QtWidgets.QTableView(self.centralwidget)
+        self.tableView.setGeometry(QtCore.QRect(10, 140, 651, 531))
+        self.tableView.setObjectName("TableView")
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 680, 21))
@@ -210,29 +215,20 @@ class Ui_mainWindow(object):
         self.Search.setText(_translate("mainWindow", "Search"))
         self.label.setText(_translate("mainWindow", "Insert \"#do you want to search\""))
 
+    def createTable(self,table_name):
+        self.twM.search_for_hashtags(self.textEdit.toPlainText())
+        # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
+        filename =f"{self.textEdit.toPlainText()}.csv"
+        model = pandasModel(self.dtM.readData(filename))
+        proxyModel = QSortFilterProxyModel()
+        proxyModel.setSourceModel(model)
+        table_name = self.tableView
+        table_name.setModel(proxyModel)
 
 
 
-    def getFile(self):
 
-        self.filename = QFileDialog.getOpenFileName(filter = "Excel or CSV(*.csv ,*.xls ,*.xlsx ,*.xlsm)")[0]
-        if self.filename == "" :
-            print("please select file")
-        else:
-            return self.filename
 
-    def readData(self):
-        self.all_data = pd.read_csv(self.filename,encoding = 'windows-1252').dropna()
-
-        global namefile
-        split = self.filename.split("/")
-        namefile = split[-1][:-4]
-
-        print(namefile)
-        self.showdata_head()
-        self.showdata_table()
-        print("read file finished")
-        return self.all_data
 
 
 
