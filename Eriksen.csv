@@ -1,4 +1,4 @@
-,URL,Content(title),sentiment,datetime,word(search),word(count),link(count)
+,URL,Content_title,sentiment,datetime,wordsearch,wordcount,linkcount
 0,https://www.bbc.com/sport/football/60889501,Netherlands 4-2 Denmark: Christian Eriksen scores on Denmark return,neutral,SAT 26 Mar 2022,Eriksen,21,151
 1,https://www.bbc.co.uk/news,BBC News Home,neutral,8h8 hours ago,Eriksen,1,304
 2,https://www.bbc.co.uk/weather,BBC Weather,neutral,15 minutes agoLast updated 15 minutes ago,Eriksen,0,82
