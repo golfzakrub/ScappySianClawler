@@ -138,7 +138,7 @@ class Crawler:
         
         
         html_text = pd.DataFrame(data=dataf, 
-            columns=["URL","Content(title)","sentiment","datetime","word(search)","word(count)","link(count)"])
+            columns=["URL","Contenttitle","sentiment","datetime","wordsearch","wordcount","linkcount"])
 
         
         html_text.to_csv(f'{searched_word}'+".csv")        
