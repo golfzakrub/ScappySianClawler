@@ -79,13 +79,14 @@ class TweepyManager():
             # tweet.user.location if tweet.user.location != '' else 'unknown',
             tweet.created_at.replace(tzinfo=None),
             self.remove_url(tweet.text),
+            tweet.retweet_count,
             self.sentiment(TextBlob(self.stem(self.cleanText(tweet.text)))),
             tweet.user.followers_count,
             f"https://twitter.com/twitter/statuses/{tweet.id}"] for tweet in tweets
             ]
                     
         tweet_text = pd.DataFrame(data=users_locs, 
-            columns=['Hashtag','Username','Date','Tweet','Sentiment','Followers_count','tweet link'])
+            columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
         
         fname = hashtag_phrase
         tweet_text.to_csv(f"{fname}.csv")
