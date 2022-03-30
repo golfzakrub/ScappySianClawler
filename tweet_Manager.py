@@ -191,7 +191,7 @@ class TweepyManager():
         
         cleaned_text = requests.get(url, headers=headers, params=params)
         
-        print(cleaned_text.json()['sentiment']['polarity'])
+        
         return cleaned_text.json()['sentiment']['polarity']
 
     def remove_url(self,txt):
