@@ -1,7 +1,5 @@
 
 from urllib.parse import urljoin
-from bleach import clean
-from pyrsistent import v
 import requests
 from bs4 import BeautifulSoup
 import re

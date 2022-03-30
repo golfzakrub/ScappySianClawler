@@ -423,10 +423,7 @@ class Ui_mainWindow(object):
 
     def createTable_web(self,table_name):
         self.progressBar_2.setProperty("value", 0)
-        # self.wcr(self.textEdit_2.toPlainText(),self.textEdit_2.toPlainText(),self.textEdit_3.toPlainText())
-        # Crawler(urls=['https://www.bbc.com/sport/football/60925012'],start=['https://www.bbc.com/sport/football/60925012'],searched_word='Liverpool').run()
         self.wcr.start_crawler([self.textEdit_2.toPlainText()],[self.textEdit_2.toPlainText()],self.textEdit_3.toPlainText())     
-        # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
         filename =f"{self.textEdit_3.toPlainText()}.csv"
         model_2 = pandasModel(self.dtM.readData(filename))
         proxyModel_2 = QSortFilterProxyModel()
