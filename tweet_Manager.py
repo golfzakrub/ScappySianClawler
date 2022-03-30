@@ -5,8 +5,8 @@ import tweepy
 import nltk
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
+import os
+from dotenv import load_dotenv
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
@@ -26,11 +26,12 @@ class TweepyManager():
         
         
     def connect(self):
-    # Replace the xxxxx with your twitter api keys
-        consumer_key= 'mhEpB8cHJhe5xt05df3LHEyeZ'
-        consumer_secret= 'dKImFjd55FWX4LX3R1V2VFi292DpQLj5NRXgFklbesOJp2hb82'
-        access_token= '912351283553513473-obrowBlTt2kNldW9wTPgRKonoXdYBIK'
-        access_token_secret= 'NnkI5fsyxxHVogATTUNp1oJxOfAspZrDBiNrFetR4Vakt'
+    # Replace the xxxxx with your twitter api 
+        load_dotenv()
+        consumer_key= os.getenv('consumer_key')
+        consumer_secret= os.getenv('consumer_secret')
+        access_token= os.getenv('access_token')
+        access_token_secret= os.getenv('access_token_secret')
     
         
         try:
