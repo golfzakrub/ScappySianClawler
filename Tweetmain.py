@@ -16,11 +16,13 @@ import pandas as pd
 from pandasModel import pandasModel 
 from tweet_Manager import TweepyManager as twM
 from data import  dataManager
+from crawler1 import Crawler
 
 class Ui_mainWindow(object):
     def __init__(self):
         self.twM = twM()
         self.dtM = dataManager()
+        self.wcr = Crawler()
 
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
@@ -230,6 +232,7 @@ class Ui_mainWindow(object):
         self.Search_2.setGeometry(QtCore.QRect(300, 50, 75, 23))
         self.Search_2.setObjectName("Search_2")
         self.progressBar_2 = QtWidgets.QProgressBar(self.tab_2)
+        self.Search_2.clicked.connect(lambda :self.createTable_web(self.textEdit_3.toPlainText()))
         self.progressBar_2.setEnabled(True)
         self.progressBar_2.setGeometry(QtCore.QRect(10, 130, 221, 16))
         palette = QtGui.QPalette()
@@ -418,7 +421,19 @@ class Ui_mainWindow(object):
         table_name = self.tableView
         table_name.setModel(proxyModel)
 
-
+    def createTable_web(self,table_name):
+        self.progressBar_2.setProperty("value", 0)
+        # self.wcr(self.textEdit_2.toPlainText(),self.textEdit_2.toPlainText(),self.textEdit_3.toPlainText())
+        # Crawler(urls=['https://www.bbc.com/sport/football/60925012'],start=['https://www.bbc.com/sport/football/60925012'],searched_word='Liverpool').run()
+        self.wcr.start_crawler([self.textEdit_2.toPlainText()],[self.textEdit_2.toPlainText()],self.textEdit_3.toPlainText())     
+        # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
+        filename =f"{self.textEdit_3.toPlainText()}.csv"
+        model_2 = pandasModel(self.dtM.readData(filename))
+        proxyModel_2 = QSortFilterProxyModel()
+        proxyModel_2.setSourceModel(model_2)
+        table_name = self.tableView_3
+        table_name.setModel(proxyModel_2)        
+        self.progressBar_2.setProperty("value", 100)
 
 
 
