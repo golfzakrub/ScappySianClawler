@@ -1,4 +1,6 @@
-import re 
+import re
+from urllib import request 
+import requests
 import tweepy 
 import nltk
 import pandas as pd
@@ -46,9 +48,23 @@ class TweepyManager():
         text =re.sub(r'#','',text) #remove the '#' symbol
         text =re.sub(r'RT[\s]+','',text)    #Remove RT
         text =re.sub(r'https?:\/\/\S+','',text) #Remove the hyper link
-        text = re.sub(r'[^\w\s]', '', text) #set to chr
+        # text = re.sub(r'[^\w\s]', '', text) #set to chr
 
         return text
+
+
+    def THcleanText(self,text):
+        url = "https://api.aiforthai.in.th/textcleansing"
+        params = {'text':f"{text}"}
+
+        headers = {
+            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            }
+        text = requests.request("GET", url, headers=headers, params=params)
+
+
+        
+        return text.json().get('cleansing_text')
 
     def stem(self,text):
         # This function is used to stem the given sentence
@@ -62,39 +78,93 @@ class TweepyManager():
     def search_for_hashtags(self, hashtag_phrase):
         api = self.connect()
         
-        tweets = api.search_tweets(
-            q=f"{hashtag_phrase} -filter:retweets", 
-            lang="en",
-            count=100)
+        keyword = hashtag_phrase
 
-        tweets_set = set()
-        for tweet in tweets:
-            tweets_set.add(tweet)
-        tweets = list(tweets_set)
+        checklang = re.compile(r'[a-zA-Z]')
+
+        ############# ENG ################
+        if checklang.match(keyword.replace("#","")):
+            lang = "en"
+            print("USE ENG SENTIMENT")
+            tweets = api.search_tweets(
+                q=f"{hashtag_phrase} -filter:retweets", 
+                lang=lang,
+                until='2022-03-31',
+                count =1000)
+
+            tweets_set = set()
+            for tweet in tweets:
+                tweets_set.add(tweet)
+            tweets = list(tweets_set)
+            
+
+            users_locs = [[
+                keyword,
+                tweet.user.screen_name,
+                # tweet.user.location if tweet.user.location != '' else 'unknown',
+                tweet.created_at.replace(tzinfo=None),
+                self.remove_url(self.cleanText((tweet.text))),
+                tweet.retweet_count,
+                self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
+                tweet.user.followers_count,
+                f"https://twitter.com/twitter/statuses/{tweet.id}"] for tweet in tweets
+                ]
+                        
+            tweet_text = pd.DataFrame(data=users_locs, 
+                columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
+            
+            fname = hashtag_phrase
+            tweet_text.to_csv(f"{fname}.csv")
+            filename =f"{fname}.csv"
+            self.dtM.readData(filename)
+
+            return filename
+
+        ############# TH ################
+        else:
+            lang = "th"
+            print("USE THAI SENTIMENT")
+            tweets = api.search_tweets(
+                q=f"{hashtag_phrase} -filter:retweets", 
+                lang=lang,
+                until='2022-03-31',
+                count = 1000)
+
+            tweets_set = set()
+            for tweet in tweets:
+                tweets_set.add(tweet)
+            tweets = list(tweets_set)
+            
+
+            users_locs = []
+            for tweet in tweets:
+                try:
+                    tweet_sentiment = self.THsentiment(self.THcleanText((tweet.text)))
+                except:
+                    continue
+                locs = [
+                            self.THcleanText(keyword),
+                            tweet.user.screen_name,
+                            # tweet.user.location if tweet.user.location != '' else 'unknown',
+                            tweet.created_at.replace(tzinfo=None),
+                            self.THcleanText(tweet.text),
+                            tweet.retweet_count,
+
+                            tweet_sentiment,
+                            tweet.user.followers_count,
+                            f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
+                users_locs.append(locs)
+            print("finish")
+            tweet_text = pd.DataFrame(data=users_locs, 
+                columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
+            
+            fname = hashtag_phrase
+            tweet_text.to_csv(f"{fname}.csv")
+            filename =f"{fname}.csv"
+            self.dtM.readData(filename)
+
+            return filename
         
-
-        users_locs = [[
-            hashtag_phrase,
-            tweet.user.screen_name,
-            # tweet.user.location if tweet.user.location != '' else 'unknown',
-            tweet.created_at.replace(tzinfo=None),
-            self.remove_url(tweet.text),
-            tweet.retweet_count,
-            self.sentiment(TextBlob(self.stem(self.cleanText(tweet.text)))),
-            tweet.user.followers_count,
-            f"https://twitter.com/twitter/statuses/{tweet.id}"] for tweet in tweets
-            ]
-                    
-        tweet_text = pd.DataFrame(data=users_locs, 
-            columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
-        
-        fname = hashtag_phrase
-        tweet_text.to_csv(f"{fname}.csv")
-        filename =f"{fname}.csv"
-        self.dtM.readData(filename)
-
-        return filename
-
 
     # def save_to_excel(self, tweets):
     #     tweets.to_excel("./data/tweets.xlsx", engine="openpyxl", index=False)
@@ -108,6 +178,21 @@ class TweepyManager():
             return 'negative'
         else:
             return 'neutral'
+
+    def THsentiment(self,cleaned_text):
+
+        url = "https://api.aiforthai.in.th/ssense"
+        
+        params = {'text':f"{cleaned_text}"}
+        
+        headers = {
+            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk"
+            }
+        
+        cleaned_text = requests.get(url, headers=headers, params=params)
+        
+        print(cleaned_text.json()['sentiment']['polarity'])
+        return cleaned_text.json()['sentiment']['polarity']
 
     def remove_url(self,txt):
         """Replace URLs found in a text string with nothing 
