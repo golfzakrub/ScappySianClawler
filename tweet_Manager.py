@@ -4,7 +4,7 @@ import requests
 import tweepy 
 import nltk
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import os
 from dotenv import load_dotenv
 from nltk.corpus import stopwords
@@ -224,3 +224,28 @@ class TweepyManager():
         return " ".join(re.sub("([^\u0E00-\u0E7Fa-zA-Z' ]|^'|'$|''|(\w+:\/\/\S+))", "", txt).split())
             
 
+    def trending(self):
+        api = self.connect()
+
+        # WOEID of Bangkok
+        woeid = 1225448
+
+        # fetching the trends
+        trends = api.get_place_trends(id = woeid)
+
+        # printing the information
+        # print("The top trends for the location are :")
+        user_loc = []
+        for value in trends:
+            for trend in value['trends']:
+                user_loc.append(trend['name'])
+
+        tweet_text = pd.DataFrame(data=user_loc, 
+            columns=['Top Trend'])
+            
+        
+        tweet_text.to_csv('trending.csv')
+        filename ='trending.csv'
+        self.dtM.readData(filename)
+
+        return filename

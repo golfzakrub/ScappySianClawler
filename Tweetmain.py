@@ -23,7 +23,7 @@ class Ui_mainWindow(object):
         self.twM = twM()
         self.dtM = dataManager()
         self.wcr = Crawler()
-
+        
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(701, 787)
@@ -394,7 +394,7 @@ class Ui_mainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(mainWindow)
         self.statusbar.setObjectName("statusbar")
         mainWindow.setStatusBar(self.statusbar)
-
+        self.createTable_Trend(self.tableView_2)
         self.retranslateUi(mainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
@@ -420,6 +420,18 @@ class Ui_mainWindow(object):
         proxyModel.setSourceModel(model)
         table_name = self.tableView
         table_name.setModel(proxyModel)
+
+    def createTable_Trend(self,table_name):
+        self.progressBar.setProperty("value", 0)
+        self.twM.trending()
+        # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
+        filename ='trending.csv'
+        model = pandasModel(self.dtM.readData(filename))
+        proxyModel = QSortFilterProxyModel()
+        proxyModel.setSourceModel(model)
+        table_name = self.tableView_2
+        table_name.setModel(proxyModel)
+        self.progressBar.setProperty("value", 100)
 
     def createTable_web(self,table_name):
         self.progressBar_2.setProperty("value", 0)
