@@ -19,9 +19,7 @@ class dataManager():
 
     def readData(self,filename):
         self.all_data = pd.read_csv(filename,encoding = 'utf-8',index_col=0).dropna()
-        # first_column = self.all_data.remove['Unnamed: 0']
-        # self.all_data = self.all_data.drop([first_column], axis=1)
-        # self.all_data.to_csv(filename, index=False)
+
         print("read file finished")
         return self.all_data
 
