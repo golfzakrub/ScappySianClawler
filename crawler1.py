@@ -166,7 +166,7 @@ class Crawler():
 
         top_words = sorted(words.items(), key=itemgetter(1), reverse=True)[:N]
 
-
+        
         # print(top_words,"top")
         # for i, (word, frequency) in enumerate(top_words, start=1):
             
@@ -182,7 +182,7 @@ class Crawler():
 
         # dataf.append({"URL": f'"{url}"',"Content(title)": f'"{str(*content)}"',"sentiment": f'"{self.sentiment(TextBlob(self.stem(str(*content).text)))}"',"datetime": f'"{str(*time)}"',"word(search)": f'"{searched_word}"',"word(count)": f'"{count_word}"',"link(count)": f'"{count_link}"'})
         
-        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain])
+        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain,top_words[0][0]],len(filtered_sentence))
         # self.data.append([url,str(*content_title),self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain])
 
         # print("5")
@@ -190,7 +190,7 @@ class Crawler():
         
         
         html_text = pd.DataFrame(data=self.data, 
-            columns=["URL","Content_title","Contents","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain"])
+            columns=["URL","Content_title","Contents","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain","Top_word","NLP_count"])
 
         # html_text = pd.DataFrame(data=self.data, 
         #     columns=["URL","Content_title","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain"])
