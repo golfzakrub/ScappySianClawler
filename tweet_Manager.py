@@ -152,14 +152,14 @@ class TweepyManager():
                             tweet.created_at.replace(tzinfo=None),
                             self.THcleanText(tweet.text),
                             tweet.retweet_count,
-                            
+                            self.THstopword(self.THcleanText((tweet.text))),
                             tweet_sentiment,
                             tweet.user.followers_count,
                             f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
                 users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             tweet_text.to_csv(f"{fname}.csv")
@@ -197,6 +197,23 @@ class TweepyManager():
         
         return cleaned_text.json()['sentiment']['polarity']
 
+
+    def THstopword(self,cleaned_text):
+        
+        
+        url = "https://api.aiforthai.in.th/tpos"
+        
+        params = {'text':f"{cleaned_text}"}
+        
+        headers = {
+            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            }
+        
+        cleaned_text= requests.get(url, headers=headers, params=params)
+        
+        return len(cleaned_text.json()['words'])
+
+    
     def remove_url(self,txt):
         """Replace URLs found in a text string with nothing 
         (i.e. it will remove the URL from the string).
