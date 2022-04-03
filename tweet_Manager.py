@@ -90,10 +90,11 @@ class TweepyManager():
             tweets = api.search_tweets(
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until='2022-03-31',
+                until='2022-04-4',
                 count =1000)
 
             tweets_set = set()
+            
             for tweet in tweets:
                 tweets_set.add(tweet)
             tweets = list(tweets_set)
@@ -106,13 +107,14 @@ class TweepyManager():
                 tweet.created_at.replace(tzinfo=None),
                 self.remove_url(self.cleanText((tweet.text))),
                 tweet.retweet_count,
+                len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
                 self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
                 tweet.user.followers_count,
                 f"https://twitter.com/twitter/statuses/{tweet.id}"] for tweet in tweets
                 ]
                         
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             tweet_text.to_csv(f"{fname}.csv")
@@ -128,7 +130,7 @@ class TweepyManager():
             tweets = api.search_tweets(
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until='2022-03-31',
+                until='2022-04-4',
                 count = 1000)
 
             tweets_set = set()
@@ -150,7 +152,7 @@ class TweepyManager():
                             tweet.created_at.replace(tzinfo=None),
                             self.THcleanText(tweet.text),
                             tweet.retweet_count,
-
+                            
                             tweet_sentiment,
                             tweet.user.followers_count,
                             f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
