@@ -147,7 +147,7 @@ class Crawler():
         filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
         # filtered_sentence_word = ""
         filtered_sentence = []
-        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an"]
+        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","the","i","s"]
         for w in word_tokens:
             if w not in stop_words:
                 if "(" in w or ")" in w :
@@ -182,7 +182,7 @@ class Crawler():
 
         # dataf.append({"URL": f'"{url}"',"Content(title)": f'"{str(*content)}"',"sentiment": f'"{self.sentiment(TextBlob(self.stem(str(*content).text)))}"',"datetime": f'"{str(*time)}"',"word(search)": f'"{searched_word}"',"word(count)": f'"{count_word}"',"link(count)": f'"{count_link}"'})
         
-        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain,top_words[0][0]],len(filtered_sentence))
+        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain,top_words[0][0],len(filtered_sentence)])
         # self.data.append([url,str(*content_title),self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain])
 
         # print("5")
