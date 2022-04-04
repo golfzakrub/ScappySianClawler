@@ -8,8 +8,12 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
 from textblob import TextBlob
 import csv
+import threading
+from string import punctuation
+from operator import itemgetter
 
 class Crawler():
 
@@ -136,7 +140,38 @@ class Crawler():
         # self.linksearch["word(count)"] = self.linksearch["word(count)"].append(count_word)
         # print('Found the word "{0}" {1} times in {2}\n'.format(searched_word, len(results),url))
         # print(words,'s')
-        # print("3.1")
+        # print("3.1")  
+
+        stop_words = set(stopwords.words('english'))
+        word_tokens = word_tokenize(word)        
+        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+        # filtered_sentence_word = ""
+        filtered_sentence = []
+        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an"]
+        for w in word_tokens:
+            if w not in stop_words:
+                if "(" in w or ")" in w :
+                    pass                
+                if w not in stop_word_more:      
+                    # filtered_sentence_word += w +" "     
+                    filtered_sentence.append(w)
+        N = 10
+        words = {}
+
+        words_gen = (wordg.strip(punctuation).lower() for line in filtered_sentence
+                                           for wordg in line.split())
+
+        for wordg in words_gen:
+            words[wordg] = words.get(wordg, 0) + 1
+
+        top_words = sorted(words.items(), key=itemgetter(1), reverse=True)[:N]
+
+        
+        # print(top_words,"top")
+        # for i, (word, frequency) in enumerate(top_words, start=1):
+            
+            # print("%s %d %d" % (word, i, frequency))        
+        
         times = []
         datetime = soup.body.find_all('time')
         for x in datetime:
@@ -147,7 +182,7 @@ class Crawler():
 
         # dataf.append({"URL": f'"{url}"',"Content(title)": f'"{str(*content)}"',"sentiment": f'"{self.sentiment(TextBlob(self.stem(str(*content).text)))}"',"datetime": f'"{str(*time)}"',"word(search)": f'"{searched_word}"',"word(count)": f'"{count_word}"',"link(count)": f'"{count_link}"'})
         
-        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain])
+        self.data.append([url,str(*content_title),word,self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain,top_words[0][0]],len(filtered_sentence))
         # self.data.append([url,str(*content_title),self.sentiment(TextBlob(self.stem(self.cleanText(word)))),str(times[0]),self.searched_word,count_word,count_link,same_domain,diff_domain])
 
         # print("5")
@@ -155,7 +190,7 @@ class Crawler():
         
         
         html_text = pd.DataFrame(data=self.data, 
-            columns=["URL","Content_title","Contents","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain"])
+            columns=["URL","Content_title","Contents","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain","Top_word","NLP_count"])
 
         # html_text = pd.DataFrame(data=self.data, 
         #     columns=["URL","Content_title","sentiment","datetime","word_search","word_count","link_count","link_same_Domain","link_diff_Domain"])
@@ -223,5 +258,5 @@ class Crawler():
         Crawler(urls=[urls],start=[start],searched_word=word).run(urls,start,word)
 
 # if __name__ == '__main__':
-    # Crawler(urls=['https://www.bbc.com/sport/football/60925012'],start=['https://www.bbc.com/sport/football/60925012'],searched_word='Liverpool').run()
+#     Crawler(urls=['https://www.bbc.com/sport/football/60925012'],start=['https://www.bbc.com/sport/football/60925012'],searched_word='Liverpool').run('https://www.bbc.com/sport/football/60925012','https://www.bbc.com/sport/football/60925012','Liverpool')
     # Crawler(urls=['https://myanimelist.net/anime/genre/48/Work_Life','https://anime-kimuchi.com/','https://anime-fast.online/']).run
