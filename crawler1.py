@@ -147,7 +147,7 @@ class Crawler():
         filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
         # filtered_sentence_word = ""
         filtered_sentence = []
-        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","THE","The","i","I","s","a",'',"<",">",":","[","]", 'about', 'above', 'across', 'after', 'afterwards', 'again',
+        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","THE","The","i","I","s","a",'','"','"',"<",">",":","[","]", 'about', 'above', 'across', 'after', 'afterwards', 'again',
         'against', 'all', 'almost', 'alone', 'along', 'already', 'also',
         'although', 'always', 'am', 'among', 'amongst', 'amount', 'an',
         'and', 'another', 'any', 'anyhow', 'anyone', 'anything', 'anyway',
