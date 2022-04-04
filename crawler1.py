@@ -143,18 +143,58 @@ class Crawler():
         # print("3.1")  
 
         stop_words = set(stopwords.words('english'))
-        word_tokens = word_tokenize(word)        
+        word_tokens = word_tokenize(word.lower())        
         filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
         # filtered_sentence_word = ""
         filtered_sentence = []
-        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","the","i","s"]
+        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","THE","The","i","I","s","a",'',"<",">",":","[","]", 'about', 'above', 'across', 'after', 'afterwards', 'again',
+        'against', 'all', 'almost', 'alone', 'along', 'already', 'also',
+        'although', 'always', 'am', 'among', 'amongst', 'amount', 'an',
+        'and', 'another', 'any', 'anyhow', 'anyone', 'anything', 'anyway',
+        'anywhere', 'are', 'around', 'as', 'at', 'back', 'be', 'became',
+        'because', 'become', 'becomes', 'becoming', 'been', 'before',
+        'beforehand', 'behind', 'being', 'below', 'beside', 'besides',
+        'between', 'beyond', 'both', 'bottom', 'but', 'by', 'call', 'can',
+        'cannot', 'could', 'do', 'done', 'down', 'due', 'during', 'each',
+        'eight', 'either', 'eleven', 'else', 'elsewhere', 'empty',
+        'enough', 'even', 'ever', 'every', 'everyone', 'everything',
+        'everywhere', 'except', 'few', 'fifteen', 'fifty', 'first', 'five',
+        'for', 'former', 'formerly', 'forty', 'four', 'from', 'front',
+        'full', 'further', 'get', 'give', 'go', 'had', 'has', 'have', 'he',
+        'hence', 'her', 'here', 'hereafter', 'hereby', 'herein',
+        'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how',
+        'however', 'hundred', 'i', 'if', 'in', 'indeed', 'into', 'is',
+        'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly',
+        'least', 'less', 'made', 'many', 'may', 'me', 'meanwhile', 'might',
+        'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much',
+        'must', 'my', 'myself', 'name', 'namely', 'neither', 'never',
+        'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone',
+        'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often',
+        'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others',
+        'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
+        'part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same',
+        'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several',
+        'she', 'should', 'show', 'side', 'since', 'six', 'sixty', 'so',
+        'some', 'somehow', 'someone', 'something', 'sometime', 'sometimes',
+        'somewhere', 'still', 'such', 'take', 'ten', 'than', 'that', 'the',
+        'their', 'them', 'themselves', 'then', 'thence', 'there',
+        'thereafter', 'thereby', 'therefore', 'therein', 'thereupon',
+        'these', 'they', 'third', 'this', 'those', 'though', 'three',
+        'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too',
+        'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'under',
+        'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well',
+        'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where',
+        'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon',
+        'wherever', 'whether', 'which', 'while', 'whither', 'who',
+        'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with',
+        'within', 'without', 'would', 'yet', 'you', 'your', 'yours',
+        'yourself', 'yourselves']
         for w in word_tokens:
-            if w not in stop_words:
-                if "(" in w or ")" in w :
-                    pass                
+            if w not in stop_words:        
                 if w not in stop_word_more:      
                     # filtered_sentence_word += w +" "     
                     filtered_sentence.append(w)
+        print(filtered_sentence,"fs")
         N = 10
         words = {}
 
@@ -167,10 +207,12 @@ class Crawler():
         top_words = sorted(words.items(), key=itemgetter(1), reverse=True)[:N]
 
         
-        # print(top_words,"top")
+        print(top_words,"top")
         # for i, (word, frequency) in enumerate(top_words, start=1):
             
             # print("%s %d %d" % (word, i, frequency))        
+        # if top_words[0][0] == "":
+        #     top_words[0][0] = '#####'
         
         times = []
         datetime = soup.body.find_all('time')
