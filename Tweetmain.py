@@ -202,18 +202,27 @@ class Ui_mainWindow(object):
         self.tableView = QtWidgets.QTableView(self.tab)
         self.tableView.setGeometry(QtCore.QRect(10, 150, 681, 571))
         self.tableView.setObjectName("tableView")
+        self.tableView.setSortingEnabled(True)
         self.label = QtWidgets.QLabel(self.tab)
         self.label.setGeometry(QtCore.QRect(10, 0, 211, 16))
         self.label.setObjectName("label")
         self.tableView_2 = QtWidgets.QTableView(self.tab)
         self.tableView_2.setGeometry(QtCore.QRect(430, 0, 261, 141))
         self.tableView_2.setObjectName("tableView_2")
+        self.tableView_2.setSortingEnabled(True)
+        self.dateEdit = QtWidgets.QDateEdit(self.tab)
+        self.dateEdit.setGeometry(QtCore.QRect(10, 70, 221, 22))
+        self.dateEdit.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
+        self.dateEdit.setTimeSpec(QtCore.Qt.LocalTime)
+        self.dateEdit.setDate(QtCore.QDate(2022, 4, 7))
+        self.dateEdit.setObjectName("dateEdit")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.tableView_3 = QtWidgets.QTableView(self.tab_2)
         self.tableView_3.setGeometry(QtCore.QRect(10, 150, 681, 571))
         self.tableView_3.setObjectName("tableView_3")
+        self.tableView_3.setSortingEnabled(True)
         self.textEdit_2 = QtWidgets.QTextEdit(self.tab_2)
         self.textEdit_2.setGeometry(QtCore.QRect(10, 20, 281, 31))
         self.textEdit_2.setAutoFillBackground(False)
@@ -410,19 +419,22 @@ class Ui_mainWindow(object):
         self.label_4.setText(_translate("mainWindow", "Insert Url"))
         self.Search_2.setText(_translate("mainWindow", "Search"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("mainWindow", "Web_Crawler"))
+        self.dateEdit.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
 
     def createTable(self,table_name):
-        self.twM.search_for_hashtags(self.textEdit.toPlainText())
+        self.progressBar.setProperty("value", 0)
+        self.twM.search_for_hashtags(self.textEdit.toPlainText(),self.dateEdit.text())
+        filename = self.twM.search_for_hashtags(self.textEdit.toPlainText(),self.dateEdit.text())
         # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
-        filename =f"{self.textEdit.toPlainText()}.csv"
+
         model = pandasModel(self.dtM.readData(filename))
         proxyModel = QSortFilterProxyModel()
         proxyModel.setSourceModel(model)
         table_name = self.tableView
         table_name.setModel(proxyModel)
-
-    def createTable_Trend(self,table_name):
-        self.progressBar.setProperty("value", 0)
+        self.progressBar.setProperty("value", 100)
+        
+    def createTable_Trend(self,table_name):    
         self.twM.trending()
         # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
         filename ='trending.csv'
@@ -431,7 +443,7 @@ class Ui_mainWindow(object):
         proxyModel.setSourceModel(model)
         table_name = self.tableView_2
         table_name.setModel(proxyModel)
-        self.progressBar.setProperty("value", 100)
+        
 
     def createTable_web(self,table_name):
         self.progressBar_2.setProperty("value", 0)
