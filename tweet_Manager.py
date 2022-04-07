@@ -1,3 +1,5 @@
+from fileinput import filename
+from msilib.schema import CreateFolder
 import re
 from urllib import request 
 import requests
@@ -13,6 +15,7 @@ from nltk.stem import PorterStemmer
 from tweepy import OAuthHandler 
 from textblob import TextBlob
 from data import dataManager
+import datetime 
 
 ###CLASS####
 
@@ -76,22 +79,24 @@ class TweepyManager():
             stem_sentence.append(porter.stem(word))
         return " ".join(stem_sentence)
 
-    def search_for_hashtags(self, hashtag_phrase):
+    def search_for_hashtags(self, hashtag_phrase,datetime):
         api = self.connect()
         
         keyword = hashtag_phrase
 
         checklang = re.compile(r'[a-zA-Z]')
-
+        
+        
+        print(datetime)
         ############# ENG ################
+        self.CreateFolder(f"{hashtag_phrase}")
         if checklang.match(keyword.replace("#","")):
             lang = "en"
             print("USE ENG SENTIMENT")
-            tweets = api.search_tweets(
+            tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until='2022-04-4',
-                count =1000)
+                until=f"{datetime}").items(100)
 
             tweets_set = set()
             
@@ -117,8 +122,13 @@ class TweepyManager():
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
-            tweet_text.to_csv(f"{fname}.csv")
-            filename =f"{fname}.csv"
+            
+            self.CreateFolder(f"{fname}")
+
+            
+            open(f"./{fname}/{fname}-{datetime}.csv","w")
+            tweet_text.to_csv(f"./{fname}/{fname}-{datetime}.csv")
+            filename=f"./{fname}/{fname}-{datetime}.csv"
             self.dtM.readData(filename)
 
             return filename
@@ -127,11 +137,10 @@ class TweepyManager():
         else:
             lang = "th"
             print("USE THAI SENTIMENT")
-            tweets = api.search_tweets(
+            tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until='2022-04-4',
-                count = 1000)
+                until=f"{datetime}").items(100)
 
             tweets_set = set()
             for tweet in tweets:
@@ -162,8 +171,12 @@ class TweepyManager():
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
-            tweet_text.to_csv(f"{fname}.csv")
-            filename =f"{fname}.csv"
+            self.CreateFolder(f"{fname}")
+
+            
+            open(f"./{fname}/{fname}-{datetime}.csv","w")
+            tweet_text.to_csv(f"./{fname}/{fname}-{datetime}.csv")
+            filename=f"./{fname}/{fname}-{datetime}.csv"
             self.dtM.readData(filename)
 
             return filename
@@ -268,3 +281,10 @@ class TweepyManager():
         self.dtM.readData(filename)
 
         return filename
+
+    def CreateFolder(self,filename):
+        
+        if not os.path.exists(f"./{filename}"):                    
+            os.mkdir(f"./{filename}")  
+            print("CreteFolder Successed")
+
