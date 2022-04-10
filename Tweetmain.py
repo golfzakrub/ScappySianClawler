@@ -17,12 +17,14 @@ from pandasModel import pandasModel
 from tweet_Manager import TweepyManager as twM
 from data import  dataManager
 from crawler1 import Crawler
+from search_database import search_database
 
 class Ui_mainWindow(object):
     def __init__(self):
         self.twM = twM()
         self.dtM = dataManager()
         self.wcr = Crawler()
+        self.sDB = search_database()
         
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
@@ -395,6 +397,52 @@ class Ui_mainWindow(object):
         self.progressBar_2.setInvertedAppearance(False)
         self.progressBar_2.setObjectName("progressBar_2")
         self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.label_5 = QtWidgets.QLabel(self.tab_3)
+        self.label_5.setGeometry(QtCore.QRect(10, 10, 211, 16))
+        self.label_5.setObjectName("label_5")
+        self.textEdit_4 = QtWidgets.QTextEdit(self.tab_3)
+        self.textEdit_4.setGeometry(QtCore.QRect(10, 60, 221, 31))
+        self.textEdit_4.setAutoFillBackground(False)
+        self.textEdit_4.setObjectName("textEdit_4")
+        self.label_6 = QtWidgets.QLabel(self.tab_3)
+        self.label_6.setGeometry(QtCore.QRect(10, 30, 211, 16))
+        self.label_6.setObjectName("label_6")
+        self.checkBox = QtWidgets.QCheckBox(self.tab_3)
+        self.checkBox.setGeometry(QtCore.QRect(240, 60, 70, 17))
+        self.checkBox.setObjectName("checkBox")
+        self.dateEdit_2 = QtWidgets.QDateEdit(self.tab_3)
+        self.dateEdit_2.setGeometry(QtCore.QRect(270, 80, 101, 22))
+        self.dateEdit_2.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
+        self.dateEdit_2.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
+        self.dateEdit_2.setCalendarPopup(True)
+        self.dateEdit_2.setTimeSpec(QtCore.Qt.LocalTime)
+        self.dateEdit_2.setDate(QtCore.QDate(2022, 4, 4))
+        self.dateEdit_2.setObjectName("dateEdit_2")
+        self.label_7 = QtWidgets.QLabel(self.tab_3)
+        self.label_7.setGeometry(QtCore.QRect(240, 80, 61, 16))
+        self.label_7.setObjectName("label_7")
+        self.label_8 = QtWidgets.QLabel(self.tab_3)
+        self.label_8.setGeometry(QtCore.QRect(380, 80, 21, 16))
+        self.label_8.setObjectName("label_8")
+        self.dateEdit_3 = QtWidgets.QDateEdit(self.tab_3)
+        self.dateEdit_3.setGeometry(QtCore.QRect(410, 80, 101, 22))
+        self.dateEdit_3.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
+        self.dateEdit_3.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
+        self.dateEdit_3.setCalendarPopup(True)
+        self.dateEdit_3.setTimeSpec(QtCore.Qt.LocalTime)
+        self.dateEdit_3.setDate(QtCore.QDate(2022, 4, 4))
+        self.dateEdit_3.setObjectName("dateEdit_3")
+        self.Search_3 = QtWidgets.QPushButton(self.tab_3)
+        self.Search_3.setGeometry(QtCore.QRect(530, 60, 75, 23))
+        self.Search_3.setObjectName("Search_3")
+        self.Search_3.clicked.connect(lambda :self.createTable_search_nodate(self.textEdit_4.toPlainText()))
+        self.tableView_4 = QtWidgets.QTableView(self.tab_3)
+        self.tableView_4.setGeometry(QtCore.QRect(10, 150, 681, 571))
+        self.tableView_4.setObjectName("tableView_4")
+        self.tabWidget.addTab(self.tab_3, "")
+
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 701, 21))
@@ -420,6 +468,15 @@ class Ui_mainWindow(object):
         self.Search_2.setText(_translate("mainWindow", "Search"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("mainWindow", "Web_Crawler"))
         self.dateEdit.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.label_5.setText(_translate("mainWindow", "DATABASE SEARCH"))
+        self.label_6.setText(_translate("mainWindow", "Insert keyword"))
+        self.checkBox.setText(_translate("mainWindow", "USE DATE"))
+        self.dateEdit_2.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.label_7.setText(_translate("mainWindow", "From"))
+        self.label_8.setText(_translate("mainWindow", "To"))
+        self.dateEdit_3.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.Search_3.setText(_translate("mainWindow", "Search"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
 
     def createTable(self,table_name):
         self.progressBar.setProperty("value", 0)
@@ -456,8 +513,13 @@ class Ui_mainWindow(object):
         table_name.setModel(proxyModel_2)        
         self.progressBar_2.setProperty("value", 100)
 
-
-
+    def createTable_search_nodate(self,table_name):
+        filename = self.sDB.tweet_search_no_date(table_name)
+        model_2 = pandasModel(filename)
+        proxyModel_2 = QSortFilterProxyModel()
+        proxyModel_2.setSourceModel(model_2)
+        table_name = self.tableView_4
+        table_name.setModel(proxyModel_2)  
 
 
 
