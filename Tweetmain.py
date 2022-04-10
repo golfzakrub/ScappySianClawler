@@ -472,10 +472,10 @@ class Ui_mainWindow(object):
         self.label_5.setText(_translate("mainWindow", "DATABASE SEARCH"))
         self.label_6.setText(_translate("mainWindow", "Insert keyword"))
         self.checkBox.setText(_translate("mainWindow", "USE DATE"))
-        self.dateEdit_2.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.dateEdit_2.setDisplayFormat(_translate("mainWindow", "yyyy-MM-dd"))
         self.label_7.setText(_translate("mainWindow", "From"))
         self.label_8.setText(_translate("mainWindow", "To"))
-        self.dateEdit_3.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.dateEdit_3.setDisplayFormat(_translate("mainWindow", "yyyy-MM-dd"))
         self.Search_3.setText(_translate("mainWindow", "Search"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
 
@@ -515,16 +515,26 @@ class Ui_mainWindow(object):
         self.progressBar_2.setProperty("value", 100)
 
     def createTable_search_nodate(self,table_name):
-        try:
-            filename = self.sDB.tweet_search_no_date(table_name)
+        if self.checkBox.isChecked():
+
+            filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
             model_2 = pandasModel(filename)
             proxyModel_2 = QSortFilterProxyModel()
             proxyModel_2.setSourceModel(model_2)
             table_name = self.tableView_4
             table_name.setModel(proxyModel_2)  
-        except:
-            print("Keyword Invalid!!")
-            pass
+      
+        else:
+            try:
+                filename = self.sDB.tweet_search_no_date(table_name)
+                model_2 = pandasModel(filename)
+                proxyModel_2 = QSortFilterProxyModel()
+                proxyModel_2.setSourceModel(model_2)
+                table_name = self.tableView_4
+                table_name.setModel(proxyModel_2)  
+            except:
+                print("Keyword Invalid!!")
+                pass
 
 
 
