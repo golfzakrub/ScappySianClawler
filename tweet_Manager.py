@@ -144,7 +144,8 @@ class TweepyManager():
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until=f"{until_date}").items(300)
+                until=f"{until_date}",
+                result_type = 'recent').items(300)
 
             tweets_set = set()
             for tweet in tweets:
