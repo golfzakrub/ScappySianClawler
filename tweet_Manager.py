@@ -144,7 +144,7 @@ class TweepyManager():
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until=f"{datetime}").items(100)
+                until=f"{until_date}").items(300)
 
             tweets_set = set()
             for tweet in tweets:
@@ -158,18 +158,19 @@ class TweepyManager():
                     tweet_sentiment = self.THsentiment(self.THcleanText((tweet.text)))
                 except:
                     continue
-                locs = [
-                            self.THcleanText(keyword),
-                            tweet.user.screen_name,
-                            # tweet.user.location if tweet.user.location != '' else 'unknown',
-                            tweet.created_at.replace(tzinfo=None),
-                            self.THcleanText(tweet.text),
-                            tweet.retweet_count,
-                            self.THstopword(self.THcleanText((tweet.text))),
-                            tweet_sentiment,
-                            tweet.user.followers_count,
-                            f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
-                users_locs.append(locs)
+                if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
+                    locs = [
+                                self.THcleanText(keyword),
+                                tweet.user.screen_name,
+                                # tweet.user.location if tweet.user.location != '' else 'unknown',
+                                tweet.created_at.replace(tzinfo=None),
+                                self.THcleanText(tweet.text),
+                                tweet.retweet_count,
+                                self.THstopword(self.THcleanText((tweet.text))),
+                                tweet_sentiment,
+                                tweet.user.followers_count,
+                                f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
+                    users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
