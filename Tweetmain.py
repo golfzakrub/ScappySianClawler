@@ -468,7 +468,7 @@ class Ui_mainWindow(object):
         self.label_4.setText(_translate("mainWindow", "Insert Url"))
         self.Search_2.setText(_translate("mainWindow", "Search"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("mainWindow", "Web_Crawler"))
-        self.dateEdit.setDisplayFormat(_translate("mainWindow", "yyyy-MM-d"))
+        self.dateEdit.setDisplayFormat(_translate("mainWindow", "yyyy-MM-dd"))
         self.label_5.setText(_translate("mainWindow", "DATABASE SEARCH"))
         self.label_6.setText(_translate("mainWindow", "Insert keyword"))
         self.checkBox.setText(_translate("mainWindow", "USE DATE"))

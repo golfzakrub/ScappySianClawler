@@ -1,7 +1,8 @@
 from fileinput import filename
 from msilib.schema import CreateFolder
 import re
-from urllib import request 
+from urllib import request
+from numpy import result_type 
 import requests
 import tweepy 
 import nltk
@@ -16,7 +17,7 @@ from tweepy import OAuthHandler
 from textblob import TextBlob
 from data import dataManager
 import datetime 
-
+from datetime import date, timedelta
 ###CLASS####
 
 
@@ -86,8 +87,11 @@ class TweepyManager():
 
         checklang = re.compile(r'[a-zA-Z]')
         
-        
-        print(datetime)
+        datetime_N = datetime.split('-')
+        start_date = date(int(datetime_N[0]),int(datetime_N[1]),int(datetime_N[2]))
+        until_date = start_date + timedelta(1)
+        yesterday_date = start_date - timedelta(1)
+        print(datetime_N)
         ############# ENG ################
         self.CreateFolder(f"{hashtag_phrase}")
         if checklang.match(keyword.replace("#","")):
@@ -96,7 +100,8 @@ class TweepyManager():
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until=f"{datetime}").items(100)
+                until=f"{until_date}",
+                result_type = 'recent').items(300)
 
             tweets_set = set()
             
@@ -105,27 +110,27 @@ class TweepyManager():
             tweets = list(tweets_set)
             
 
-            users_locs = [[
-                keyword,
-                tweet.user.screen_name,
-                # tweet.user.location if tweet.user.location != '' else 'unknown',
-                tweet.created_at.replace(tzinfo=None),
-                self.remove_url(self.cleanText((tweet.text))),
-                tweet.retweet_count,
-                len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
-                self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
-                tweet.user.followers_count,
-                f"https://twitter.com/twitter/statuses/{tweet.id}"] for tweet in tweets
-                ]
-                        
+            users_locs = []
+            for tweet in tweets:
+                if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
+                    locs = [
+                        keyword,
+                        tweet.user.screen_name,
+                        # tweet.user.location if tweet.user.location != '' else 'unknown',
+                        tweet.created_at.replace(tzinfo=None),
+                        self.remove_url(self.cleanText((tweet.text))),
+                        tweet.retweet_count,
+                        len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
+                        self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
+                        tweet.user.followers_count,
+                        f"https://twitter.com/twitter/statuses/{tweet.id}"]
+                    users_locs.append(locs)
+                                
             tweet_text = pd.DataFrame(data=users_locs, 
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
-            
-            
 
-            
             open(f"./{fname}/{fname}_{datetime}.csv","w")
             tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
             filename=f"./{fname}/{fname}_{datetime}.csv"
@@ -139,7 +144,7 @@ class TweepyManager():
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
-                until=f"{datetime}").items(100)
+                until=f"{until_date}").items(300)
 
             tweets_set = set()
             for tweet in tweets:
@@ -153,18 +158,19 @@ class TweepyManager():
                     tweet_sentiment = self.THsentiment(self.THcleanText((tweet.text)))
                 except:
                     continue
-                locs = [
-                            self.THcleanText(keyword),
-                            tweet.user.screen_name,
-                            # tweet.user.location if tweet.user.location != '' else 'unknown',
-                            tweet.created_at.replace(tzinfo=None),
-                            self.THcleanText(tweet.text),
-                            tweet.retweet_count,
-                            self.THstopword(self.THcleanText((tweet.text))),
-                            tweet_sentiment,
-                            tweet.user.followers_count,
-                            f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
-                users_locs.append(locs)
+                if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
+                    locs = [
+                                self.THcleanText(keyword),
+                                tweet.user.screen_name,
+                                # tweet.user.location if tweet.user.location != '' else 'unknown',
+                                tweet.created_at.replace(tzinfo=None),
+                                self.THcleanText(tweet.text),
+                                tweet.retweet_count,
+                                self.THstopword(self.THcleanText((tweet.text))),
+                                tweet_sentiment,
+                                tweet.user.followers_count,
+                                f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
+                    users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
