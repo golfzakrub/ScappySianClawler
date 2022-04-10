@@ -123,14 +123,13 @@ class TweepyManager():
             
             fname = hashtag_phrase
             
-            self.CreateFolder(f"{fname}")
+            
 
             
-            open(f"./{fname}/{fname}-{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}-{datetime}.csv")
-            filename=f"./{fname}/{fname}-{datetime}.csv"
+            open(f"./{fname}/{fname}_{datetime}.csv","w")
+            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
+            filename=f"./{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
-
             return filename
 
         ############# TH ################
@@ -171,12 +170,12 @@ class TweepyManager():
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
-            self.CreateFolder(f"{fname}")
+            
 
             
-            open(f"./{fname}/{fname}-{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}-{datetime}.csv")
-            filename=f"./{fname}/{fname}-{datetime}.csv"
+            open(f"./{fname}/{fname}_{datetime}.csv","w")
+            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
+            filename=f"./{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
 
             return filename
