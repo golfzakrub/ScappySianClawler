@@ -216,7 +216,7 @@ class Ui_mainWindow(object):
         self.dateEdit.setGeometry(QtCore.QRect(10, 70, 221, 22))
         self.dateEdit.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
         self.dateEdit.setTimeSpec(QtCore.Qt.LocalTime)
-        self.dateEdit.setDate(QtCore.QDate(2022, 4, 7))
+        self.dateEdit.setDate(QtCore.QDate(2022, 4, 10))
         self.dateEdit.setObjectName("dateEdit")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
@@ -418,7 +418,7 @@ class Ui_mainWindow(object):
         self.dateEdit_2.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
         self.dateEdit_2.setCalendarPopup(True)
         self.dateEdit_2.setTimeSpec(QtCore.Qt.LocalTime)
-        self.dateEdit_2.setDate(QtCore.QDate(2022, 4, 4))
+        self.dateEdit_2.setDate(QtCore.QDate(2022, 4, 10))
         self.dateEdit_2.setObjectName("dateEdit_2")
         self.label_7 = QtWidgets.QLabel(self.tab_3)
         self.label_7.setGeometry(QtCore.QRect(240, 80, 61, 16))
@@ -432,7 +432,7 @@ class Ui_mainWindow(object):
         self.dateEdit_3.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
         self.dateEdit_3.setCalendarPopup(True)
         self.dateEdit_3.setTimeSpec(QtCore.Qt.LocalTime)
-        self.dateEdit_3.setDate(QtCore.QDate(2022, 4, 4))
+        self.dateEdit_3.setDate(QtCore.QDate(2022, 4, 10))
         self.dateEdit_3.setObjectName("dateEdit_3")
         self.Search_3 = QtWidgets.QPushButton(self.tab_3)
         self.Search_3.setGeometry(QtCore.QRect(530, 60, 75, 23))
@@ -441,6 +441,7 @@ class Ui_mainWindow(object):
         self.tableView_4 = QtWidgets.QTableView(self.tab_3)
         self.tableView_4.setGeometry(QtCore.QRect(10, 150, 681, 571))
         self.tableView_4.setObjectName("tableView_4")
+        self.tableView_4.setSortingEnabled(True)
         self.tabWidget.addTab(self.tab_3, "")
 
         mainWindow.setCentralWidget(self.centralwidget)
@@ -514,12 +515,16 @@ class Ui_mainWindow(object):
         self.progressBar_2.setProperty("value", 100)
 
     def createTable_search_nodate(self,table_name):
-        filename = self.sDB.tweet_search_no_date(table_name)
-        model_2 = pandasModel(filename)
-        proxyModel_2 = QSortFilterProxyModel()
-        proxyModel_2.setSourceModel(model_2)
-        table_name = self.tableView_4
-        table_name.setModel(proxyModel_2)  
+        try:
+            filename = self.sDB.tweet_search_no_date(table_name)
+            model_2 = pandasModel(filename)
+            proxyModel_2 = QSortFilterProxyModel()
+            proxyModel_2.setSourceModel(model_2)
+            table_name = self.tableView_4
+            table_name.setModel(proxyModel_2)  
+        except:
+            print("Keyword Invalid!!")
+            pass
 
 
 
