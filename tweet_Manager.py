@@ -69,7 +69,7 @@ class TweepyManager():
         text = requests.request("GET", url, headers=headers, params=params)
 
 
-        print(text.json().get('cleansing_text'))
+
         return text.json().get('cleansing_text')
 
     def stem(self,text):
@@ -122,11 +122,8 @@ class TweepyManager():
             count = 0
             for tweet in tweets:
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    print(keyword_list)
                     now_text = self.remove_url(self.cleanText((tweet.text))).split(" ")
-                    print(now_text)
-                    count = now_text.count(f"{keyword_list}")
-                    print(count)            
+                    count = now_text.count(f"{keyword_list}")           
                     locs = [
                         keyword,
                         tweet.user.screen_name,
@@ -169,6 +166,13 @@ class TweepyManager():
             
 
             users_locs = []
+            #diff from eng keyword this use keyword with #
+            try:
+                keyword_lower = keyword.lower()
+                
+                
+            except:
+                pass
             count = 0
             for tweet in tweets:
                 try:
@@ -176,9 +180,9 @@ class TweepyManager():
                 except:
                     continue
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    # now_text = self.THKeyword(self.THcleanText((tweet.text)))
+                    now_text = self.THcleanText((tweet.text)).split(" ")
                 
-                    # count = now_text.count(keyword_list)
+                    count = now_text.count(keyword_lower)
                     locs = [
                                 self.THcleanText(keyword),
                                 tweet.user.screen_name,
