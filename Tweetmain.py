@@ -9,8 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import  QSortFilterProxyModel
+from PyQt5.QtWidgets import QFileDialog ,QApplication, QFileSystemModel, QTreeView, QWidget, QVBoxLayout
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import  QSortFilterProxyModel,QDir
 import pandas as pd
 
 from pandasModel import pandasModel 
@@ -424,10 +425,10 @@ class Ui_mainWindow(object):
         self.label_7.setGeometry(QtCore.QRect(240, 80, 61, 16))
         self.label_7.setObjectName("label_7")
         self.label_8 = QtWidgets.QLabel(self.tab_3)
-        self.label_8.setGeometry(QtCore.QRect(380, 80, 21, 16))
+        self.label_8.setGeometry(QtCore.QRect(240, 110, 21, 16))
         self.label_8.setObjectName("label_8")
         self.dateEdit_3 = QtWidgets.QDateEdit(self.tab_3)
-        self.dateEdit_3.setGeometry(QtCore.QRect(410, 80, 101, 22))
+        self.dateEdit_3.setGeometry(QtCore.QRect(270, 110, 100, 22))
         self.dateEdit_3.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
         self.dateEdit_3.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
         self.dateEdit_3.setCalendarPopup(True)
@@ -435,13 +436,22 @@ class Ui_mainWindow(object):
         self.dateEdit_3.setDate(QtCore.QDate(2022, 4, 10))
         self.dateEdit_3.setObjectName("dateEdit_3")
         self.Search_3 = QtWidgets.QPushButton(self.tab_3)
-        self.Search_3.setGeometry(QtCore.QRect(530, 60, 75, 23))
+        self.Search_3.setGeometry(QtCore.QRect(320, 50, 75, 22))
         self.Search_3.setObjectName("Search_3")
         self.Search_3.clicked.connect(lambda :self.createTable_search_nodate(self.textEdit_4.toPlainText()))
         self.tableView_4 = QtWidgets.QTableView(self.tab_3)
         self.tableView_4.setGeometry(QtCore.QRect(10, 150, 681, 571))
         self.tableView_4.setObjectName("tableView_4")
         self.tableView_4.setSortingEnabled(True)
+        self.tableView_5 = QtWidgets.QTreeView(self.tab_3)
+        self.tableView_5.setGeometry(QtCore.QRect(430, 0, 261, 141))
+        self.tableView_5.setObjectName("treeView")
+        model = QFileSystemModel()
+        model.setRootPath(QDir.currentPath())
+  
+        self.tableView_5.setModel(model)
+        self.tableView_5.setRootIndex(model.index(QDir.currentPath()))
+
         self.tabWidget.addTab(self.tab_3, "")
 
         mainWindow.setCentralWidget(self.centralwidget)
@@ -516,13 +526,16 @@ class Ui_mainWindow(object):
 
     def createTable_search_nodate(self,table_name):
         if self.checkBox.isChecked():
-
-            filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
-            model_2 = pandasModel(filename)
-            proxyModel_2 = QSortFilterProxyModel()
-            proxyModel_2.setSourceModel(model_2)
-            table_name = self.tableView_4
-            table_name.setModel(proxyModel_2)  
+            try:
+                filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
+                model_2 = pandasModel(filename)
+                proxyModel_2 = QSortFilterProxyModel()
+                proxyModel_2.setSourceModel(model_2)
+                table_name = self.tableView_4
+                table_name.setModel(proxyModel_2)  
+            except:
+                print("Keyword of Date Invalid!!")
+                pass
       
         else:
             try:
