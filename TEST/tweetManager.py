@@ -61,7 +61,7 @@ class TweepyManager():
         tweets = api.search_tweets(
             q=f"{hashtag_phrase} -filter:retweets", 
             lang="en",
-            count=100)
+            count=10)
 
         tweets_set = set()
         for tweet in tweets:
@@ -69,13 +69,14 @@ class TweepyManager():
         tweets = list(tweets_set)
         
 
-        users_locs = [[
+        users_locs = [
             hashtag_phrase,
             tweet.user.screen_name,
             # tweet.user.location if tweet.user.location != '' else 'unknown',
             tweet.created_at.replace(tzinfo=None),
             self.remove_url(tweet.text),
             self.sentiment(TextBlob(self.stem(self.cleanText(tweet.text)))),
+            
             tweet.user.followers_count,
             f"https://twitter.com/twitter/statuses/{tweet.id}",
             ]
