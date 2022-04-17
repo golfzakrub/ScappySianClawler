@@ -101,33 +101,42 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(300)
+                result_type = 'recent').items(500)
 
-            tweets_set = set()
-            
+            tweets_set = set()        
             for tweet in tweets:
                 tweets_set.add(tweet)
+ 
             tweets = list(tweets_set)
             
 
             users_locs = []
+            
+            keyword_lower = keyword.lower()
+            keyword_list = keyword_lower.replace("#","")
+            
+            count = 0
             for tweet in tweets:
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    locs = [
-                        keyword,
-                        tweet.user.screen_name,
-                        # tweet.user.location if tweet.user.location != '' else 'unknown',
-                        tweet.created_at.replace(tzinfo=None),
-                        self.remove_url(self.cleanText((tweet.text))),
-                        tweet.retweet_count,
-                        len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
-                        self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
-                        tweet.user.followers_count,
-                        f"https://twitter.com/twitter/statuses/{tweet.id}"]
-                    users_locs.append(locs)
+                    now_text = TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")
+                    count = now_text.count(keyword_list)
+                    
+                locs = [
+                    keyword,
+                    tweet.user.screen_name,
+                    # tweet.user.location if tweet.user.location != '' else 'unknown',
+                    tweet.created_at.replace(tzinfo=None),
+                    self.remove_url(self.cleanText((tweet.text))),
+                    tweet.retweet_count,
+                    len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
+                    count,
+                    self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
+                    tweet.user.followers_count,
+                    f"https://twitter.com/twitter/statuses/{tweet.id}"]
+                users_locs.append(locs)
                                 
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
 
@@ -145,7 +154,7 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(300)
+                result_type = 'recent').items(500)
 
             tweets_set = set()
             for tweet in tweets:
@@ -294,3 +303,6 @@ class TweepyManager():
             os.mkdir(f"./{filename}")  
             print("CreteFolder Successed")
 
+
+    def Keyword_count_eng(self,cleaned_text):
+        pass
