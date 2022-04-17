@@ -1,6 +1,7 @@
 from fileinput import filename
 from msilib.schema import CreateFolder
 import re
+from traceback import print_tb
 from urllib import request
 from numpy import result_type 
 import requests
@@ -68,7 +69,7 @@ class TweepyManager():
         text = requests.request("GET", url, headers=headers, params=params)
 
 
-        
+        print(text.json().get('cleansing_text'))
         return text.json().get('cleansing_text')
 
     def stem(self,text):
@@ -101,7 +102,7 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(500)
+                result_type = 'recent').items(50)
 
             tweets_set = set()        
             for tweet in tweets:
@@ -111,29 +112,34 @@ class TweepyManager():
             
 
             users_locs = []
-            
-            keyword_lower = keyword.lower()
-            keyword_list = keyword_lower.replace("#","")
+            try:
+                keyword_lower = keyword.lower()
+                keyword_list = keyword_lower.replace("#","")
+                
+            except:
+                pass
             
             count = 0
             for tweet in tweets:
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    now_text = TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")
-                    count = now_text.count(keyword_list)
-                    
-                locs = [
-                    keyword,
-                    tweet.user.screen_name,
-                    # tweet.user.location if tweet.user.location != '' else 'unknown',
-                    tweet.created_at.replace(tzinfo=None),
-                    self.remove_url(self.cleanText((tweet.text))),
-                    tweet.retweet_count,
-                    len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
-                    count,
-                    self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
-                    tweet.user.followers_count,
-                    f"https://twitter.com/twitter/statuses/{tweet.id}"]
-                users_locs.append(locs)
+                    print(keyword_list)
+                    now_text = self.remove_url(self.cleanText((tweet.text))).split(" ")
+                    print(now_text)
+                    count = now_text.count(f"{keyword_list}")
+                    print(count)            
+                    locs = [
+                        keyword,
+                        tweet.user.screen_name,
+                        # tweet.user.location if tweet.user.location != '' else 'unknown',
+                        tweet.created_at.replace(tzinfo=None),
+                        self.remove_url(self.cleanText((tweet.text))),
+                        tweet.retweet_count,
+                        len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
+                        count,
+                        self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
+                        tweet.user.followers_count,
+                        f"https://twitter.com/twitter/statuses/{tweet.id}"]
+                    users_locs.append(locs)
                                 
             tweet_text = pd.DataFrame(data=users_locs, 
                 columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','Followers_count','tweet link'])
@@ -154,7 +160,7 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(500)
+                result_type = 'recent').items(20)
 
             tweets_set = set()
             for tweet in tweets:
@@ -163,12 +169,16 @@ class TweepyManager():
             
 
             users_locs = []
+            count = 0
             for tweet in tweets:
                 try:
                     tweet_sentiment = self.THsentiment(self.THcleanText((tweet.text)))
                 except:
                     continue
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
+                    # now_text = self.THKeyword(self.THcleanText((tweet.text)))
+                
+                    # count = now_text.count(keyword_list)
                     locs = [
                                 self.THcleanText(keyword),
                                 tweet.user.screen_name,
@@ -177,13 +187,14 @@ class TweepyManager():
                                 self.THcleanText(tweet.text),
                                 tweet.retweet_count,
                                 self.THstopword(self.THcleanText((tweet.text))),
+                                count,
                                 tweet_sentiment,
                                 tweet.user.followers_count,
                                 f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
                     users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             
@@ -241,7 +252,23 @@ class TweepyManager():
         
         return len(cleaned_text.json()['words'])
 
-    
+    def THKeyword(self,cleaned_text):
+        
+        
+        url = "https://api.aiforthai.in.th/tpos"
+        
+        params = {'text':f"{cleaned_text}"}
+        
+        headers = {
+            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            }
+        
+        cleaned_text= requests.get(url, headers=headers, params=params)
+        # print(cleaned_text.json()['words'])
+        
+        return cleaned_text.json()['words']
+
+
     def remove_url(self,txt):
         """Replace URLs found in a text string with nothing 
         (i.e. it will remove the URL from the string).
