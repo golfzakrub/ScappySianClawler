@@ -19,6 +19,10 @@ from textblob import TextBlob
 from data import dataManager
 import datetime 
 from datetime import date, timedelta
+import emoji
+from pythainlp.util import normalize
+from pythainlp.tokenize import word_tokenize
+from pythainlp.corpus import thai_stopwords
 ###CLASS####
 
 
@@ -64,7 +68,7 @@ class TweepyManager():
         params = {'text':f"{text}"}
 
         headers = {
-            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            'Apikey': "LZscuA9AIoUvt4OH5fFzpaB5dwy4aOD7",
             }
         text = requests.request("GET", url, headers=headers, params=params)
 
@@ -102,7 +106,7 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(50)
+                result_type = 'recent').items(500)
 
             tweets_set = set()        
             for tweet in tweets:
@@ -157,7 +161,7 @@ class TweepyManager():
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
                 until=f"{until_date}",
-                result_type = 'recent').items(20)
+                result_type = 'recent').items(500)
 
             tweets_set = set()
             for tweet in tweets:
@@ -166,35 +170,31 @@ class TweepyManager():
             
 
             users_locs = []
+            keyword= keyword.replace("#","")
             #diff from eng keyword this use keyword with #
-            try:
-                keyword_lower = keyword.lower()
-                
-                
-            except:
-                pass
+
             count = 0
             for tweet in tweets:
                 try:
-                    tweet_sentiment = self.THsentiment(self.THcleanText((tweet.text)))
+                    tweet_sentiment = self.THsentiment(normalize(self.remove_url_th(tweet.text)))
+
                 except:
                     continue
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    now_text = self.THcleanText((tweet.text)).split(" ")
-                
-                    count = now_text.count(keyword_lower)
+                    now_text = normalize(self.remove_url_th(tweet.text))
+                    count = now_text.count(f"{keyword}")           
                     locs = [
-                                self.THcleanText(keyword),
-                                tweet.user.screen_name,
-                                # tweet.user.location if tweet.user.location != '' else 'unknown',
-                                tweet.created_at.replace(tzinfo=None),
-                                self.THcleanText(tweet.text),
-                                tweet.retweet_count,
-                                self.THstopword(self.THcleanText((tweet.text))),
-                                count,
-                                tweet_sentiment,
-                                tweet.user.followers_count,
-                                f"https://twitter.com/twitter/statuses/%7Btweet.id%7D"]
+                        f"#{keyword}",
+                        tweet.user.screen_name,
+                        # tweet.user.location if tweet.user.location != '' else 'unknown',
+                        tweet.created_at.replace(tzinfo=None),
+                        normalize(self.remove_url_th(tweet.text)),
+                        tweet.retweet_count,
+                        len(self.THStopword_new(self.remove_url_th(tweet.text))),
+                        count,
+                        tweet_sentiment,
+                        tweet.user.followers_count,
+                        f"https://twitter.com/twitter/statuses/{tweet.id}"]
                     users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
@@ -205,7 +205,7 @@ class TweepyManager():
 
             
             open(f"./{fname}/{fname}_{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
+            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv",encoding='utf-8-sig')
             filename=f"./{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
 
@@ -232,7 +232,7 @@ class TweepyManager():
         params = {'text':f"{cleaned_text}"}
         
         headers = {
-            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk"
+            'Apikey': "LZscuA9AIoUvt4OH5fFzpaB5dwy4aOD7"
             }
         
         cleaned_text = requests.get(url, headers=headers, params=params)
@@ -249,7 +249,7 @@ class TweepyManager():
         params = {'text':f"{cleaned_text}"}
         
         headers = {
-            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            'Apikey': "LZscuA9AIoUvt4OH5fFzpaB5dwy4aOD7",
             }
         
         cleaned_text= requests.get(url, headers=headers, params=params)
@@ -264,7 +264,7 @@ class TweepyManager():
         params = {'text':f"{cleaned_text}"}
         
         headers = {
-            'Apikey': "Oh2wndIoRybtDhRSJVN5u2HugwQSFhkk",
+            'Apikey': "LZscuA9AIoUvt4OH5fFzpaB5dwy4aOD7",
             }
         
         cleaned_text= requests.get(url, headers=headers, params=params)
@@ -331,9 +331,22 @@ class TweepyManager():
     def CreateFolder(self,filename):
         
         if not os.path.exists(f"./{filename}"):                    
-            os.mkdir(f"./{filename}")  
+            os.mkdir(f"./{filename}")
             print("CreteFolder Successed")
 
 
-    def Keyword_count_eng(self,cleaned_text):
-        pass
+    def remove_emoji(self,text):
+        return ''.join([c for c in text if c not in emoji.UNICODE_EMOJI])
+
+
+    def THStopword_new(self,text):
+        text = f"{text}"
+        list_word = word_tokenize(text)
+        
+
+
+        stopwords = list(thai_stopwords())
+        list_word_not_stopwords = [i for i in list_word if i not in stopwords]
+        
+
+        return list_word_not_stopwords
