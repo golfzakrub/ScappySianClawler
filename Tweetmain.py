@@ -613,6 +613,7 @@ class Ui_mainWindow(object):
             else:
                 try:
                     filename = self.sDB.tweet_search_no_date(table_name)
+                    # filename = self.sDB.tweet_search_from_text()
                     model_2 = pandasModel(filename)
                     proxyModel_2 = QSortFilterProxyModel()
                     proxyModel_2.setSourceModel(model_2)

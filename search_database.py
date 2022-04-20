@@ -22,7 +22,7 @@ class search_database():
         self.dtM = dataManager()
     
     def tweet_search_no_date(self,keyword):
-        all_files = glob.glob(f"{keyword}/*.csv")
+        all_files = glob.glob(f"data_tweepy/{keyword}/*.csv")
         df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
         return df
 
@@ -42,10 +42,10 @@ class search_database():
         for i in range(delta.days + 1):
             day = start_date + timedelta(days=i)
             # print(r"#Liverpool//Liverpool_{day}.csv")
-            files = f"{keyword}\\{keyword}_{day}.csv"
+            files = f"data_tweepy/{keyword}\\{keyword}_{day}.csv"
             date_list.append(files)
         
-        all_files = glob.glob(f"{keyword}/*.csv")
+        all_files = glob.glob(f"data_tweepy/{keyword}/*.csv")
 
         interseclist = self.intersection(date_list,all_files)
 
@@ -54,6 +54,12 @@ class search_database():
                 
 
         
+        return df
+
+    def tweet_search_from_text(self):
+        field = ['Hashtag','Username','retweet']
+        all_files = glob.glob(f"data_tweepy/*/*.csv")
+        df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
         return df
 
 

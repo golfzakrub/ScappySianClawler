@@ -98,7 +98,10 @@ class TweepyManager():
         yesterday_date = start_date - timedelta(1)
         print(datetime_N)
         ############# ENG ################
-        self.CreateFolder(f"{hashtag_phrase}")
+        self.CreateMainFolder()
+        self.CreateSubFolder(f"{hashtag_phrase}")
+        
+        
         if checklang.match(keyword.replace("#","")):            
             lang = "en"
             hashtag_pattern = re.compile(r"#[a-zA-Z']+")
@@ -108,7 +111,7 @@ class TweepyManager():
                 lang=lang,
                 tweet_mode="extended",
                 until=f"{until_date}",
-                result_type = 'recent').items(500)
+                result_type = 'recent').items(50)
 
             
             users_locs = []
@@ -145,9 +148,9 @@ class TweepyManager():
             
             fname = hashtag_phrase
 
-            open(f"./{fname}/{fname}_{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
-            filename=f"./{fname}/{fname}_{datetime}.csv"
+            open(f"./data_tweepy/{fname}/{fname}_{datetime}.csv","w")
+            tweet_text.to_csv(f"./data_tweepy/{fname}/{fname}_{datetime}.csv")
+            filename=f"./data_tweepy/{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
             return filename
 
@@ -201,9 +204,9 @@ class TweepyManager():
             
 
             
-            open(f"./{fname}/{fname}_{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
-            filename=f"./{fname}/{fname}_{datetime}.csv"
+            open(f"./data_tweepy/{fname}/{fname}_{datetime}.csv","w")
+            tweet_text.to_csv(f"./data_tweepy/{fname}/{fname}_{datetime}.csv")
+            filename=f"./data_tweepy/{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
 
             return filename
@@ -325,11 +328,15 @@ class TweepyManager():
 
         return filename
 
-    def CreateFolder(self,filename):
-        
-        if not os.path.exists(f"./{filename}"):                    
-            os.mkdir(f"./{filename}")
-            print("CreteFolder Successed")
+    def CreateMainFolder(self):
+        if not os.path.exists(f"./data_tweepy"):                    
+            os.mkdir(f"./data_tweepy")
+            print("CreteMainFolder Successed")        
+
+    def CreateSubFolder(self,filename):
+        if not os.path.exists(f"./data_tweepy/{filename}"):                    
+            os.mkdir(f"./data_tweepy/{filename}")
+            print("CreteSubFolder Successed")
 
 
     def remove_emoji(self,text):
