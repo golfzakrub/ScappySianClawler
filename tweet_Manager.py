@@ -99,22 +99,18 @@ class TweepyManager():
         print(datetime_N)
         ############# ENG ################
         self.CreateFolder(f"{hashtag_phrase}")
-        if checklang.match(keyword.replace("#","")):
+        if checklang.match(keyword.replace("#","")):            
             lang = "en"
+            hashtag_pattern = re.compile(r"#[a-zA-Z']+")
             print("USE ENG SENTIMENT")
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
+                tweet_mode="extended",
                 until=f"{until_date}",
                 result_type = 'recent').items(500)
 
-            tweets_set = set()        
-            for tweet in tweets:
-                tweets_set.add(tweet)
- 
-            tweets = list(tweets_set)
             
-
             users_locs = []
             try:
                 keyword_lower = keyword.lower()
@@ -126,24 +122,26 @@ class TweepyManager():
             count = 0
             for tweet in tweets:
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    now_text = self.remove_url(self.cleanText((tweet.text))).split(" ")
+                    Relatehashtag = re.findall(hashtag_pattern, tweet.full_text)
+                    now_text = self.remove_url(self.cleanText((tweet.full_text))).split(" ")
                     count = now_text.count(f"{keyword_list}")           
                     locs = [
                         keyword,
                         tweet.user.screen_name,
                         # tweet.user.location if tweet.user.location != '' else 'unknown',
                         tweet.created_at.replace(tzinfo=None),
-                        self.remove_url(self.cleanText((tweet.text))),
+                        self.remove_url(self.cleanText((tweet.full_text))),
                         tweet.retweet_count,
-                        len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.text))))).split(" ")),
+                        len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.full_text))))).split(" ")),                        
                         count,
-                        self.sentiment(TextBlob(self.stem(self.cleanText((tweet.text))))),
+                        self.sentiment(TextBlob(self.stem(self.cleanText((tweet.full_text))))),
+                        Relatehashtag,
                         tweet.user.followers_count,
                         f"https://twitter.com/twitter/statuses/{tweet.id}"]
                     users_locs.append(locs)
                                 
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHastag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
 
@@ -156,17 +154,14 @@ class TweepyManager():
         ############# TH ################
         else:
             lang = "th"
+            hashtag_pattern = re.compile(r"#[\u0E00-\u0E7Fa-zA-Z']+")
             print("USE THAI SENTIMENT")
             tweets = tweepy.Cursor(api.search_tweets,
                 q=f"{hashtag_phrase} -filter:retweets", 
                 lang=lang,
+                tweet_mode="extended",
                 until=f"{until_date}",
                 result_type = 'recent').items(500)
-
-            tweets_set = set()
-            for tweet in tweets:
-                tweets_set.add(tweet)
-            tweets = list(tweets_set)
             
 
             users_locs = []
@@ -176,36 +171,38 @@ class TweepyManager():
             count = 0
             for tweet in tweets:
                 try:
-                    tweet_sentiment = self.THsentiment(normalize(self.remove_url_th(tweet.text)))
+                    tweet_sentiment = self.THsentiment(normalize(self.remove_url_th(tweet.full_text)))
 
                 except:
                     continue
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
-                    now_text = normalize(self.remove_url_th(tweet.text))
+                    Relatehashtag = re.findall(hashtag_pattern, tweet.full_text)
+                    now_text = normalize(self.remove_url_th(tweet.full_text))
                     count = now_text.count(f"{keyword}")           
                     locs = [
                         f"#{keyword}",
                         tweet.user.screen_name,
                         # tweet.user.location if tweet.user.location != '' else 'unknown',
                         tweet.created_at.replace(tzinfo=None),
-                        normalize(self.remove_url_th(tweet.text)),
+                        normalize(self.remove_url_th(tweet.full_text)),
                         tweet.retweet_count,
-                        len(self.THStopword_new(self.remove_url_th(tweet.text))),
+                        len(self.THStopword_new(self.remove_url_th(tweet.full_text))),
                         count,
                         tweet_sentiment,
+                        Relatehashtag,
                         tweet.user.followers_count,
                         f"https://twitter.com/twitter/statuses/{tweet.id}"]
                     users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHastag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             
 
             
             open(f"./{fname}/{fname}_{datetime}.csv","w")
-            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv",encoding='utf-8-sig')
+            tweet_text.to_csv(f"./{fname}/{fname}_{datetime}.csv")
             filename=f"./{fname}/{fname}_{datetime}.csv"
             self.dtM.readData(filename)
 
