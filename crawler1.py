@@ -802,22 +802,22 @@ class Crawler():
             #             times.append(time_word.replace('Â\xa0',""))
                         
         print("2")
-        # same_domain = 0
-        # url_split = url.split("/")
-        # url_link = ""
-        # for i5 in url_split[0:3]:
-        #     url_link += i5+"/"
-        # link = []
-        # links = soup.body.find_all('a')
-        # link = [j.get('href').strip() for j in links]
-        # for j in link:
-        #     if url_link in j:
-        #         same_domain += 1
-        #     elif j.startswith('/'):
-        #         same_domain += 1
+        same_domain = 0
+        url_split = url.split("/")
+        url_link = ""
+        for i5 in url_split[0:3]:
+            url_link += i5+"/"
+        link = []
+        links = soup.body.find_all('a')
+        link = [j.get('href').strip() for j in links]
+        for j in link:
+            if url_link in j:
+                same_domain += 1
+            elif j.startswith('/'):
+                same_domain += 1
                 
-        # count_link = len(link)
-        # diff_domain = int(count_link) - int(same_domain)
+        count_link = len(link)
+        diff_domain = int(count_link) - int(same_domain)
 
 
         # print("dsa1")
@@ -937,9 +937,9 @@ class Crawler():
         if 'www.bbc.' in url:
             print("a")
             if word !="" and str(*content_title) != "":              
-                self.data_bbc.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_bbc.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text1 = pd.DataFrame(data=self.data_bbc, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
                 
                 self.CreateFolder('bbc') 
                 open('./bbc'+"/bbc.csv","w")
@@ -951,9 +951,9 @@ class Crawler():
         elif 'www.standard.' in url:
             print("a")
             if word !="" and str(*content_title) != "":               
-                self.data_standard.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_standard.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text2 = pd.DataFrame(data=self.data_standard, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count",'same_domain','diff_domain'])
 
                 self.CreateFolder('standard') 
                 open(f"./standard/standard.csv","w")
@@ -1143,9 +1143,9 @@ class Crawler():
         elif 'eftfootball.com/archives' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_eftfootball.append([url,str(*content_title),word,sentiment,self.searched_word,count_word]) #sen
+                self.data_eftfootball.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain]) #sen
                 html_text16 = pd.DataFrame(data=self.data_eftfootball, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count",'same_domain','diff_domain'])
 
                 self.CreateFolder('eftfootball') 
                 open(f"./eftfootball/eftfootball.csv","w")

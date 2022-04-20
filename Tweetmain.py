@@ -516,7 +516,7 @@ class Ui_mainWindow(object):
         self.progressBar_2.setProperty("value", 0)
         if self.textEdit_2.toPlainText() != "" and self.textEdit_3.toPlainText() != "":  
             ### name_csv file
-            if  self.textEdit_2.toPlainText().count("www.") == 1:
+            if  self.textEdit_2.toPlainText().count("https") == 1:
                 if "www.assist-football" in self.textEdit_2.toPlainText():
                     filename = "assist-football"
                 if "www.bbc" in self.textEdit_2.toPlainText():
