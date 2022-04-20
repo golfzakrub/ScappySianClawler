@@ -55,7 +55,12 @@ class search_database():
 
         
         return df
-        
+
+
+    def Web_search_no_date(self,keyword):
+        all_files = glob.glob(f"data_csv/{keyword}/*.csv")
+        df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
+        return df
 
     def intersection(self,lst1, lst2):
         lst3 = [value for value in lst1 if value in lst2]
