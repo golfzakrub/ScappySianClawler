@@ -226,11 +226,11 @@ class Ui_mainWindow(object):
         self.tableView_3.setObjectName("tableView_3")
         self.tableView_3.setSortingEnabled(True)
         self.textEdit_2 = QtWidgets.QTextEdit(self.tab_2)
-        self.textEdit_2.setGeometry(QtCore.QRect(10, 20, 281, 31))
+        self.textEdit_2.setGeometry(QtCore.QRect(10, 20, 281, 40))
         self.textEdit_2.setAutoFillBackground(False)
         self.textEdit_2.setObjectName("textEdit_2")
         self.textEdit_3 = QtWidgets.QTextEdit(self.tab_2)
-        self.textEdit_3.setGeometry(QtCore.QRect(10, 80, 281, 31))
+        self.textEdit_3.setGeometry(QtCore.QRect(10, 80, 281, 40))
         self.textEdit_3.setAutoFillBackground(False)
         self.textEdit_3.setObjectName("textEdit_3")
         self.label_3 = QtWidgets.QLabel(self.tab_2)
@@ -576,74 +576,97 @@ class Ui_mainWindow(object):
                     self.progressBar_2.setProperty("value", 100)                                              
             else:
                 list_web = []
+                list_web_url = []
                 list_webs = self.textEdit_2.toPlainText().split(",")  
                 for i in list_webs:
                     
                     if "www.assist-football" in i:
                         filename = "assist-football"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.bbc" in i:
                         filename = "bbc"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.birminghammail" in i:
                         filename = "birminghammail"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "eftfootball.com" in i:
                         filename = "eftfootball"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.eurosport" in i:
                         filename = "eurosport"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "football.kapook.com" in i:
                         filename = "football-kapook"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.football365" in i:
                         filename = "football365"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.footballaddrict" in i:
                         filename = "footballaddrict"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "footballhits98.com" in i:
                         filename = "footballhits98"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.footballmoment" in i:
                         filename = "footballmoment"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.goal" in i:
                         filename = "goal"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.shotongoal" in i:
                         filename = "shotongoal"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.siamsport" in i:
                         filename = "siamsport"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.skysports" in i:
                         filename = "skysports"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "sport.mthai.com" in i:
                         filename = "sport-mthai"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.sportbible" in i:
                         filename = "sportbible"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.sportsmole" in i:
                         filename = "sportsmole"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.standard" in i:
                         filename = "standard"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "talksport.com" in i:
                         filename = "talksport"
                         list_web.append(filename)
+                        list_web_url.append(i)
                     if "www.thairath" in i:
                         filename = "thairath"     
-                        list_web.append(filename)       
+                        list_web.append(filename)
+                        list_web_url.append(i)       
                             
                 if not os.path.exists(f"./{filename}/{filename}.csv"):                                                              
-                    if "," in self.textEdit_2.toPlainText():                   
-                        self.wcr.start_crawler(list_web,list_web,self.textEdit_3.toPlainText())
+                    if "," in self.textEdit_2.toPlainText():      
+                        print(list_web_url)             
+                        self.wcr.start_crawler(list_web_url,list_web_url,self.textEdit_3.toPlainText())
                         list_all_files = []
+                        
                         for i in range(len(list_web)):
                             all_files = glob.glob(f"{list_web[i]}/*.csv")
                             list_all_files.append(*all_files)
