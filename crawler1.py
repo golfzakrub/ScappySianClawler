@@ -265,7 +265,7 @@ class Crawler():
         self.visited_urls = []
         self.start_urls = start
         self.urls_to_visit = urls
-
+        print(self.urls_to_visit,"urls")
         self.searched_word = word.lower()
         self.second_urls = []
         self.tri_urls = []
@@ -801,26 +801,33 @@ class Crawler():
             #         if time_word not in times:
             #             times.append(time_word.replace('Â\xa0',""))
                         
-        print("2")
+        # print("2")
         same_domain = 0
         url_split = url.split("/")
         url_link = ""
         for i5 in url_split[0:3]:
             url_link += i5+"/"
+       
         link = []
         links = soup.body.find_all('a')
-        link = [j.get('href').strip() for j in links]
+        
+        if len(links) != 0:
+            try:
+                link = [j.get('href').strip() for j in links]
+            except Exception:
+                link = []
+        
         for j in link:
             if url_link in j:
                 same_domain += 1
             elif j.startswith('/'):
                 same_domain += 1
-                
+             
         count_link = len(link)
         diff_domain = int(count_link) - int(same_domain)
 
 
-        # print("dsa1")
+        print("dsa1")
         word = ""
         for temp in content:            
             word += temp+" "
@@ -836,7 +843,7 @@ class Crawler():
         # self.linksearch["word(count)"] = self.linksearch["word(count)"].append(count_word)
         # print('Found the word "{0}" {1} times in {2}\n'.format(searched_word, len(results),url))
         # print(words,'s')
-        print("3.1")  
+        # print("3.1")  
         
         ### nlp
         # stop_words = set(stopwords.words('english'))
@@ -964,9 +971,9 @@ class Crawler():
         elif 'www.skysports' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_skysports.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_skysports.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text3 = pd.DataFrame(data=self.data_skysports, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
                 
                 self.CreateFolder('skysports') 
                 open(f"./skysports/skysports.csv","w")
@@ -977,9 +984,9 @@ class Crawler():
         elif 'www.eurosport' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_eurosport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_eurosport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text4 = pd.DataFrame(data=self.data_eurosport, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
                 
                 self.CreateFolder('eurosport') 
                 open(f"./eurosport/eurosport.csv","w")
@@ -990,9 +997,9 @@ class Crawler():
         elif 'www.siamsport' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_siamsport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word]) #sen
+                self.data_siamsport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain]) #sen
                 html_text5 = pd.DataFrame(data=self.data_siamsport, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('siamsport') 
                 open(f"./siamsport/siamsport.csv","w")
@@ -1005,13 +1012,13 @@ class Crawler():
             print("a")
             if word !="" :
                 if str(*content_title) != "":                
-                    self.data_thairath.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                    self.data_thairath.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                     html_text6 = pd.DataFrame(data=self.data_thairath, 
-                        columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                        columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
                 else:
-                    self.data_thairath.append([url,str(content[0]),word,sentiment,self.searched_word,count_word])
+                    self.data_thairath.append([url,str(content[0]),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                     html_text6 = pd.DataFrame(data=self.data_thairath, 
-                        columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])                    
+                        columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])                    
 
                 self.CreateFolder('thairath') 
                 open(f"./thairath/thairath.csv","w")
@@ -1023,9 +1030,9 @@ class Crawler():
             print("a1")
             if word !="" and str(*content_title) != "":
                 print("b")
-                self.data_goal.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_goal.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text7 = pd.DataFrame(data=self.data_goal, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('goal') 
                 open(f"./goal/goal.csv","w")
@@ -1037,9 +1044,9 @@ class Crawler():
         elif 'www.sportsmole.co.uk' in url and ".html" in url and "news" in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_sportsmole.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_sportsmole.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text8 = pd.DataFrame(data=self.data_sportsmole, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('sportsmole') 
                 open(f"./sportsmole/sportsmole.csv","w")
@@ -1051,9 +1058,9 @@ class Crawler():
         elif 'www.birminghammail' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_birminghammail.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_birminghammail.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text9 = pd.DataFrame(data=self.data_birminghammail, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('birminghammail') 
                 open(f"./birminghammail/birminghammail.csv","w")
@@ -1064,9 +1071,9 @@ class Crawler():
         elif 'www.football365' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_football365.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_football365.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text10 = pd.DataFrame(data=self.data_football365, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('football365') 
                 open(f"./football365/football365.csv","w")
@@ -1077,9 +1084,9 @@ class Crawler():
         elif 'talksport' in url and len(url) >37:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_talksport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_talksport.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text11 = pd.DataFrame(data=self.data_talksport, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
                      
                 self.CreateFolder('talksport')    
                 open(f"./talksport/talksport.csv","w")
@@ -1091,9 +1098,9 @@ class Crawler():
         elif 'football.kapook.com' in url and "news" in url:
             print("a4")
             if word !="" and str(*content_title) != "":         
-                self.data_kapook.append([url,str(*content_title),word,sentiment,self.searched_word,count_word]) #sen
+                self.data_kapook.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain]) #sen
                 html_text12 = pd.DataFrame(data=self.data_kapook, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('football-kapook')    
                 open(f"./football-kapook/football-kapook.csv","w")
@@ -1104,9 +1111,9 @@ class Crawler():
         elif 'www.shotongoal.com' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_shotongoal.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_shotongoal.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text13 = pd.DataFrame(data=self.data_shotongoal, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('shotongoal')  
                 open(f"./shotongoal/shotongoal.csv","w")
@@ -1117,9 +1124,9 @@ class Crawler():
         elif 'www.footballaddrict.com' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_footballaddrict.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_footballaddrict.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text14 = pd.DataFrame(data=self.data_footballaddrict, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('footballaddrict') 
                 open(f"./footballaddrict/footballaddrict.csv","w")
@@ -1130,9 +1137,9 @@ class Crawler():
         elif 'www.assist-football.com' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_assist.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_assist.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text15 = pd.DataFrame(data=self.data_assist, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('assist-football') 
                 open(f"./assist-football/assist-football.csv","w")
@@ -1155,9 +1162,9 @@ class Crawler():
 
         elif 'footballhits98' in url:
             if word !="":
-                self.data_footballhits98.append([url,str(content[0]),word,sentiment,self.searched_word,count_word]) #sen
+                self.data_footballhits98.append([url,str(content[0]),word,sentiment,self.searched_word,count_word,same_domain,diff_domain]) #sen
                 html_text17 = pd.DataFrame(data=self.data_footballhits98, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])                    
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])                    
 
                 self.CreateFolder('footballhits98') 
                 open(f"./footballhits98/footballhits98.csv","w")
@@ -1170,9 +1177,9 @@ class Crawler():
             if word !="" and str(*content_title) != "":
                 print('S')
                 sentiment_text = 'neutral'
-                self.data_footballmoment.append([url,str(*content_title),word,sentiment_text,self.searched_word,count_word])
+                self.data_footballmoment.append([url,str(*content_title),word,sentiment_text,self.searched_word,count_word,same_domain,diff_domain])
                 html_text18 = pd.DataFrame(data=self.data_footballmoment, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('footballmoment') 
                 open(f"./footballmoment/footballmoment.csv","w")
@@ -1188,9 +1195,9 @@ class Crawler():
         elif 'sport.mthai.com' in url:
             print("a")
             if word !="" and str(*content_title) != "":
-                self.data_mthai.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_mthai.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text19 = pd.DataFrame(data=self.data_mthai, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('sport-mthai') 
                 open(f"./sport-mthai/sport-mthai.csv","w")
@@ -1201,9 +1208,9 @@ class Crawler():
         elif 'www.sportbible.com' in url:
             print("a")
             if word !="" and str(*content_title) != "":  
-                self.data_sportbible.append([url,str(*content_title),word,sentiment,self.searched_word,count_word])
+                self.data_sportbible.append([url,str(*content_title),word,sentiment,self.searched_word,count_word,same_domain,diff_domain])
                 html_text20 = pd.DataFrame(data=self.data_sportbible, 
-                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count"])
+                    columns=["URL","Content_title","Contents","sentiment","word_search","word_count","same_domain","diff_domain"])
 
                 self.CreateFolder('sportbible') 
                 open(f"./sportbible/sportbible.csv","w")
@@ -1273,6 +1280,7 @@ class Crawler():
 
     def start_crawler(self,urls,start,word):
         Crawler(urls=[urls],start=[start],searched_word=word).run(urls,start,word)
+
 
     def CreateFolder(self,filename):
         

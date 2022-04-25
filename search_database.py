@@ -8,7 +8,7 @@ import nltk
 import pandas as pd
 # import matplotlib.pyplot as plt
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from tweepy import OAuthHandler 
 from textblob import TextBlob
 from data import dataManager
