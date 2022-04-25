@@ -556,24 +556,9 @@ class Ui_mainWindow(object):
                 if "talksport.com" in self.textEdit_2.toPlainText():
                     filename = "talksport"
                 if "www.thairath" in self.textEdit_2.toPlainText():
-                    filename = "thairath"                
-            else:
-                print("coming soon")
-                    # all_files = glob.glob(f"{keyword}/*.csv")
-                    # df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
-                pass  
-            
-            if not os.path.exists(f"./{filename}/{filename}.csv"):                                          
-                if "," in self.textEdit_2.toPlainText():
-                    list_web = self.textEdit_2.toPlainText().split(",")                    
-                    self.wcr.start_crawler(list_web,list_web,self.textEdit_3.toPlainText())    
-                    model_2 = pandasModel(self.dtM.readData(f'{filename}.csv'))
-                    proxyModel_2 = QSortFilterProxyModel()
-                    proxyModel_2.setSourceModel(model_2)
-                    table_name = self.tableView_3
-                    table_name.setModel(proxyModel_2)        
-                    self.progressBar_2.setProperty("value", 100) 
-                else:
+                    filename = "thairath"    
+                    
+                if not os.path.exists(f"./{filename}/{filename}.csv"):                                          
                     self.wcr.start_crawler([self.textEdit_2.toPlainText()],[self.textEdit_2.toPlainText()],self.textEdit_3.toPlainText())      
                     model_2 = pandasModel(self.dtM.readData(f"./{filename}/{filename}.csv"))
                     proxyModel_2 = QSortFilterProxyModel()
@@ -581,13 +566,107 @@ class Ui_mainWindow(object):
                     table_name = self.tableView_3
                     table_name.setModel(proxyModel_2)        
                     self.progressBar_2.setProperty("value", 100)   
+                       
+                else:
+                    model_2 = pandasModel(self.dtM.readData(f"./{filename}/{filename}.csv"))
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_3
+                    table_name.setModel(proxyModel_2)        
+                    self.progressBar_2.setProperty("value", 100)                                              
             else:
-                model_2 = pandasModel(self.dtM.readData(f"./{filename}/{filename}.csv"))
-                proxyModel_2 = QSortFilterProxyModel()
-                proxyModel_2.setSourceModel(model_2)
-                table_name = self.tableView_3
-                table_name.setModel(proxyModel_2)        
-                self.progressBar_2.setProperty("value", 100)                                 
+                list_web = []
+                list_webs = self.textEdit_2.toPlainText().split(",")  
+                for i in list_webs:
+                    
+                    if "www.assist-football" in i:
+                        filename = "assist-football"
+                        list_web.append(filename)
+                    if "www.bbc" in i:
+                        filename = "bbc"
+                        list_web.append(filename)
+                    if "www.birminghammail" in i:
+                        filename = "birminghammail"
+                        list_web.append(filename)
+                    if "eftfootball.com" in i:
+                        filename = "eftfootball"
+                        list_web.append(filename)
+                    if "www.eurosport" in i:
+                        filename = "eurosport"
+                        list_web.append(filename)
+                    if "football.kapook.com" in i:
+                        filename = "football-kapook"
+                        list_web.append(filename)
+                    if "www.football365" in i:
+                        filename = "football365"
+                        list_web.append(filename)
+                    if "www.footballaddrict" in i:
+                        filename = "footballaddrict"
+                        list_web.append(filename)
+                    if "footballhits98.com" in i:
+                        filename = "footballhits98"
+                        list_web.append(filename)
+                    if "www.footballmoment" in i:
+                        filename = "footballmoment"
+                        list_web.append(filename)
+                    if "www.goal" in i:
+                        filename = "goal"
+                        list_web.append(filename)
+                    if "www.shotongoal" in i:
+                        filename = "shotongoal"
+                        list_web.append(filename)
+                    if "www.siamsport" in i:
+                        filename = "siamsport"
+                        list_web.append(filename)
+                    if "www.skysports" in i:
+                        filename = "skysports"
+                        list_web.append(filename)
+                    if "sport.mthai.com" in i:
+                        filename = "sport-mthai"
+                        list_web.append(filename)
+                    if "www.sportbible" in i:
+                        filename = "sportbible"
+                        list_web.append(filename)
+                    if "www.sportsmole" in i:
+                        filename = "sportsmole"
+                        list_web.append(filename)
+                    if "www.standard" in i:
+                        filename = "standard"
+                        list_web.append(filename)
+                    if "talksport.com" in i:
+                        filename = "talksport"
+                        list_web.append(filename)
+                    if "www.thairath" in i:
+                        filename = "thairath"     
+                        list_web.append(filename)       
+                            
+                if not os.path.exists(f"./{filename}/{filename}.csv"):                                                              
+                    if "," in self.textEdit_2.toPlainText():                   
+                        self.wcr.start_crawler(list_web,list_web,self.textEdit_3.toPlainText())
+                        list_all_files = []
+                        for i in range(len(list_web)):
+                            all_files = glob.glob(f"{list_web[i]}/*.csv")
+                            list_all_files.append(*all_files)
+                        list_df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in list_all_files))                            
+                        model_2 = pandasModel(list_df)
+                        proxyModel_2 = QSortFilterProxyModel()
+                        proxyModel_2.setSourceModel(model_2)
+                        table_name = self.tableView_3
+                        table_name.setModel(proxyModel_2)        
+                        self.progressBar_2.setProperty("value", 100)                                         
+                else:
+                    list_all_files = []
+                    for i in range(len(list_web)):
+                        all_files = glob.glob(f"{list_web[i]}/*.csv")
+                        list_all_files.append(*all_files)
+                    
+                    list_df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in list_all_files))
+                    model_2 = pandasModel(list_df)
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_3
+                    table_name.setModel(proxyModel_2)        
+                    self.progressBar_2.setProperty("value", 100)                                 
                             
 
 
