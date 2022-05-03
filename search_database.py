@@ -15,6 +15,7 @@ from data import dataManager
 import datetime 
 from datetime import date, timedelta
 import glob
+from collections import Counter
 
 
 class search_database():
@@ -56,15 +57,15 @@ class search_database():
         
         return df
 
-    def Sentiment_Chart(self):
-        field = ['Sentiment']
-        all_files = glob.glob(f"data_tweepy/*/*.csv")
-        df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
-        return df
-
 
     def Web_search_no_date(self,keyword):
-        all_files = glob.glob(f"data_csv/{keyword}/*.csv")
+        all_files = glob.glob(f"DataCSV/{keyword}/*.csv")
+        df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
+
+        return df
+
+    def Web_search_with_key(self,keyword):
+        all_files = glob.glob(f"DataKeyword/{keyword}.csv")
         df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
 
         return df
@@ -72,3 +73,19 @@ class search_database():
     def intersection(self,lst1, lst2):
         lst3 = [value for value in lst1 if value in lst2]
         return lst3           
+
+    def DBRelateHashtag(self,filename):
+        # filename = './data_tweepy/#Liverpool/#Liverpool_2022-05-03.csv'
+        # df = pd.read_csv(filename,encoding = 'utf-8')
+        count_word = Counter()
+
+        for list in filename["RelateHashtag"]:
+                    count_word += Counter(eval(list))
+
+        count_word_list =[]
+        for item in count_word.most_common():
+            locs = [item[0],item[1]]
+            count_word_list.append(locs)
+        df = pd.DataFrame(data=count_word_list,columns=['Hashtag','count'])
+
+        return df

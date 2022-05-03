@@ -23,7 +23,7 @@ import emoji
 from pythainlp.util import normalize
 from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus import thai_stopwords
-
+from collections import Counter
 
 ###CLASS####
 
@@ -113,7 +113,7 @@ class TweepyManager():
                 lang=lang,
                 tweet_mode="extended",
                 until=f"{until_date}",
-                result_type = 'recent').items(300)
+                result_type = 'recent').items(700)
 
             
             users_locs = []
@@ -146,7 +146,7 @@ class TweepyManager():
                     users_locs.append(locs)
                                 
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHastag','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHashtag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
 
@@ -177,10 +177,15 @@ class TweepyManager():
             for tweet in tweets:
                 try:
                     tweet_sentiment = self.THsentiment(normalize(self.remove_url_th(tweet.full_text)))
+                    if tweet_sentiment =="":
+                        tweet_sentiment ="neutral"
 
                 except:
                     continue
+                if tweet_sentiment =="":
+                    tweet_sentiment ="neutral"
                 if tweet.created_at.replace(tzinfo=None).date() > yesterday_date:
+
                     Relatehashtag = re.findall(hashtag_pattern, tweet.full_text)
                     now_text = normalize(self.remove_url_th(tweet.full_text))
                     count = now_text.count(f"{keyword}")           
@@ -200,7 +205,7 @@ class TweepyManager():
                     users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHastag','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHashtag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             
@@ -357,5 +362,20 @@ class TweepyManager():
 
 
 
+    def RelateHashtag(self,filename):
+        # filename = './data_tweepy/#Liverpool/#Liverpool_2022-05-03.csv'
+        df = pd.read_csv(filename,encoding = 'utf-8').dropna()
+        count_word = Counter()
+
+        for list in df["RelateHashtag"]:
+                    count_word += Counter(eval(list))
+
+        count_word_list =[]
+        for item in count_word.most_common():
+            locs = [item[0],item[1]]
+            count_word_list.append(locs)
+        df = pd.DataFrame(data=count_word_list,columns=['Hashtag','count'])
+
+        return df
 
 
