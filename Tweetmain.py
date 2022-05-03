@@ -28,7 +28,7 @@ class Ui_mainWindow(object):
         self.dtM = dataManager()
         self.wcr = Crawler()
         self.sDB = search_database()
-        self.WbE = WebEngineView()
+
         
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
@@ -786,17 +786,7 @@ class Ui_mainWindow(object):
                     print("Keyword Invalid!!")
                     pass           
 
-    # def plot_pie(self):
-    #     print("Start Pie Plot...")
-    #     if len(self.listWidget_3) == 0 and len(self.listWidget_2) == 0:
-    #         return print("ERROR")
-    #     pie ="pie"
-    #     self.data_plot(pie)            
-    #     self.verticalLayout.removeWidget(self.view)
-    #     self.view =WebEngineView()
-    #     self.view.updateChart()
-    #     self.verticalLayout.addWidget(self.view)
-    #     print("Pie Plot success!!!")              
+          
 
 
 
