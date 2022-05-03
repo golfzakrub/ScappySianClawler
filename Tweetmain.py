@@ -454,7 +454,7 @@ class Ui_mainWindow(object):
         self.checkBox_2.setGeometry(QtCore.QRect(240, 40, 81, 17))
         self.checkBox_2.setObjectName("checkBox_2")
         self.label_9 = QtWidgets.QLabel(self.tab)
-        self.label_9.setGeometry(QtCore.QRect(10, 130, 411, 16))
+        self.label_9.setGeometry(QtCore.QRect(10, 130, 511, 16))
         self.label_9.setObjectName("label_9")
         self.label_10 = QtWidgets.QLabel(self.tab_3)
         self.label_10.setGeometry(QtCore.QRect(20, 150, 661, 16))
@@ -536,10 +536,9 @@ class Ui_mainWindow(object):
         neutral_raw = fileObjece['Sentiment'].value_counts().get('neutral')
         maxcol = positive_raw+negative_raw+neutral_raw
 
- 
-        positive = int(positive_raw/maxcol*100)
-        negative = int(negative_raw/maxcol*100)
-        neutral = int(neutral_raw/maxcol*100)
+        positive = float("{:.2f}".format(positive_raw/maxcol*100))        
+        negative = float("{:.2f}".format(negative_raw/maxcol*100))
+        neutral = float("{:.2f}".format(neutral_raw/maxcol*100))
         self.label_9.setText(f"Sentiment({maxcol} tweets) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
 
     def Web_TweetSentimentLabel(self,filename):        
@@ -550,14 +549,15 @@ class Ui_mainWindow(object):
         try:
             neutral_raw = filename['sentiment'].value_counts().get('neutral')
             maxcol = positive_raw+negative_raw+neutral_raw
-            positive = int(positive_raw/maxcol*100)
-            negative = int(negative_raw/maxcol*100)
-            neutral = int(neutral_raw/maxcol*100)
+            positive = float("{:.2f}".format(positive_raw/maxcol*100))        
+            negative = float("{:.2f}".format(negative_raw/maxcol*100))
+            neutral = float("{:.2f}".format(neutral_raw/maxcol*100))
             self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
         except:
             maxcol = positive_raw+negative_raw
-            positive = int(positive_raw/maxcol*100)
-            negative = int(negative_raw/maxcol*100)
+            positive = float("{:.2f}".format(positive_raw/maxcol*100))        
+            negative = float("{:.2f}".format(negative_raw/maxcol*100))
+
             self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw})")
         
 
@@ -569,10 +569,9 @@ class Ui_mainWindow(object):
         neutral_raw = filename['Sentiment'].value_counts().get('neutral')
         maxcol = positive_raw+negative_raw+neutral_raw
 
- 
-        positive = int(positive_raw/maxcol*100)
-        negative = int(negative_raw/maxcol*100)
-        neutral = int(neutral_raw/maxcol*100)
+        positive = float("{:.2f}".format(positive_raw/maxcol*100))        
+        negative = float("{:.2f}".format(negative_raw/maxcol*100))
+        neutral = float("{:.2f}".format(neutral_raw/maxcol*100))
         self.label_10.setText(f"Sentiment({maxcol} tweets) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
 
     def createTable_Trend(self,table_name):    
