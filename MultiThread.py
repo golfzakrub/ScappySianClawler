@@ -12,3 +12,4 @@ class TweetThread_Search(QtCore.QThread):
     def run(self):
         self.tw_search.search_for_hashtags(self.hashtag_phrase,self.datetime)
         self.finished.emit()
+

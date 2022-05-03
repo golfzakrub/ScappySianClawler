@@ -18,7 +18,7 @@ from tweet_Manager import TweepyManager as twM
 from data import  dataManager
 from crawler1 import Crawler
 from search_database import search_database
-from WebEngineView import WebEngineView
+
 from MultiThread import TweetThread_Search
 import glob
 
@@ -198,7 +198,7 @@ class Ui_mainWindow(object):
         self.textEdit.setAutoFillBackground(False)
         self.textEdit.setObjectName("textEdit")
         self.label_2 = QtWidgets.QLabel(self.tab)
-        self.label_2.setGeometry(QtCore.QRect(380, 60, 41, 20))
+        self.label_2.setGeometry(QtCore.QRect(480, 60, 41, 20))
         self.label_2.setObjectName("label_2")
         self.Search = QtWidgets.QPushButton(self.tab)
         self.Search.setGeometry(QtCore.QRect(240, 30, 75, 23))
@@ -213,9 +213,10 @@ class Ui_mainWindow(object):
         self.label.setGeometry(QtCore.QRect(10, 0, 211, 16))
         self.label.setObjectName("label")
         self.tableView_2 = QtWidgets.QTableView(self.tab)
-        self.tableView_2.setGeometry(QtCore.QRect(430, 0, 261, 141))
+        self.tableView_2.setGeometry(QtCore.QRect(530, 0, 161, 141))
         self.tableView_2.setObjectName("tableView_2")
         self.tableView_2.setSortingEnabled(True)
+        
         self.dateEdit = QtWidgets.QDateEdit(self.tab)
         self.dateEdit.setGeometry(QtCore.QRect(10, 70, 221, 22))
         self.dateEdit.setLocale(QtCore.QLocale(QtCore.QLocale.Afar, QtCore.QLocale.Ethiopia))
@@ -443,7 +444,7 @@ class Ui_mainWindow(object):
         self.Search_3.setObjectName("Search_3")
         self.Search_3.clicked.connect(lambda :self.createTable_search_nodate(self.textEdit_4.toPlainText()))
         self.tableView_4 = QtWidgets.QTableView(self.tab_3)
-        self.tableView_4.setGeometry(QtCore.QRect(10, 150, 681, 571))
+        self.tableView_4.setGeometry(QtCore.QRect(10, 170, 681, 551))
         self.tableView_4.setObjectName("tableView_4")
         self.tableView_4.setSortingEnabled(True)
         self.tableView_5 = QtWidgets.QTreeView(self.tab_3)
@@ -452,6 +453,12 @@ class Ui_mainWindow(object):
         self.checkBox_2 = QtWidgets.QCheckBox(self.tab_3)
         self.checkBox_2.setGeometry(QtCore.QRect(240, 40, 81, 17))
         self.checkBox_2.setObjectName("checkBox_2")
+        self.label_9 = QtWidgets.QLabel(self.tab)
+        self.label_9.setGeometry(QtCore.QRect(10, 130, 411, 16))
+        self.label_9.setObjectName("label_9")
+        self.label_10 = QtWidgets.QLabel(self.tab_3)
+        self.label_10.setGeometry(QtCore.QRect(20, 150, 661, 16))
+        self.label_10.setObjectName("label_9")
         model = QFileSystemModel()
         model.setRootPath(QDir.currentPath())
   
@@ -495,6 +502,8 @@ class Ui_mainWindow(object):
         self.Search_3.setText(_translate("mainWindow", "Search"))
         self.checkBox_2.setText(_translate("mainWindow", "Web Search"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
+        self.label_9.setText(_translate("mainWindow", "Sentiment = Positive,Negative,Neutral"))
+        self.label_10.setText(_translate("mainWindow", "Sentiment = Positive,Negative,Neutral"))
 
     def search_tweet(self):
         self.progressBar.setProperty("value", 0)
@@ -518,7 +527,54 @@ class Ui_mainWindow(object):
         table_name = self.tableView
         table_name.setModel(proxyModel)
         self.progressBar.setProperty("value", 100)
+        self.TweetSentimentLabel(filename)
+
+    def TweetSentimentLabel(self,filename):        
+        fileObjece = pd.read_csv(filename,encoding = 'utf-8',index_col=0).dropna()
+        positive_raw = fileObjece['Sentiment'].value_counts().get('positive')
+        negative_raw = fileObjece['Sentiment'].value_counts().get('negative')
+        neutral_raw = fileObjece['Sentiment'].value_counts().get('neutral')
+        maxcol = positive_raw+negative_raw+neutral_raw
+
+ 
+        positive = int(positive_raw/maxcol*100)
+        negative = int(negative_raw/maxcol*100)
+        neutral = int(neutral_raw/maxcol*100)
+        self.label_9.setText(f"Sentiment({maxcol} tweets) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
+
+    def Web_TweetSentimentLabel(self,filename):        
         
+        positive_raw = filename['sentiment'].value_counts().get('positive')
+        negative_raw = filename['sentiment'].value_counts().get('negative')
+
+        try:
+            neutral_raw = filename['sentiment'].value_counts().get('neutral')
+            maxcol = positive_raw+negative_raw+neutral_raw
+            positive = int(positive_raw/maxcol*100)
+            negative = int(negative_raw/maxcol*100)
+            neutral = int(neutral_raw/maxcol*100)
+            self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
+        except:
+            maxcol = positive_raw+negative_raw
+            positive = int(positive_raw/maxcol*100)
+            negative = int(negative_raw/maxcol*100)
+            self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw})")
+        
+
+
+    def DB_TweetSentimentLabel(self,filename):        
+        
+        positive_raw = filename['Sentiment'].value_counts().get('positive')
+        negative_raw = filename['Sentiment'].value_counts().get('negative')
+        neutral_raw = filename['Sentiment'].value_counts().get('neutral')
+        maxcol = positive_raw+negative_raw+neutral_raw
+
+ 
+        positive = int(positive_raw/maxcol*100)
+        negative = int(negative_raw/maxcol*100)
+        neutral = int(neutral_raw/maxcol*100)
+        self.label_10.setText(f"Sentiment({maxcol} tweets) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
+
     def createTable_Trend(self,table_name):    
         self.twM.trending()
         # table_name = self.twM.search_for_hashtags(self.textEdit.toPlainText())
@@ -690,14 +746,15 @@ class Ui_mainWindow(object):
 
     def createTable_search_nodate(self,table_name):
         if self.checkBox_2.isChecked() == False:
-            if self.checkBox.isChecked() == True:
+            if self.checkBox.isChecked() == True: #With Date
                 try:
                     filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
                     model_2 = pandasModel(filename)
                     proxyModel_2 = QSortFilterProxyModel()
                     proxyModel_2.setSourceModel(model_2)
                     table_name = self.tableView_4
-                    table_name.setModel(proxyModel_2)  
+                    table_name.setModel(proxyModel_2)
+                    self.DB_TweetSentimentLabel(filename)
                 except:
                     print("Keyword of Date Invalid!!")
                     pass
@@ -710,19 +767,21 @@ class Ui_mainWindow(object):
                     proxyModel_2 = QSortFilterProxyModel()
                     proxyModel_2.setSourceModel(model_2)
                     table_name = self.tableView_4
-                    table_name.setModel(proxyModel_2)  
+                    table_name.setModel(proxyModel_2)
+                    self.DB_TweetSentimentLabel(filename)  
                 except:
                     print("Keyword Invalid!!")
                     pass
 
-        if self.checkBox_2.isChecked() == True:
+        if self.checkBox_2.isChecked() == True: #Web search
                 try:
                     filename = self.sDB.Web_search_no_date(table_name)
                     model_2 = pandasModel(filename)
                     proxyModel_2 = QSortFilterProxyModel()
                     proxyModel_2.setSourceModel(model_2)
                     table_name = self.tableView_4
-                    table_name.setModel(proxyModel_2)  
+                    table_name.setModel(proxyModel_2)
+                    self.Web_TweetSentimentLabel(filename)
                 except:
                     print("Keyword Invalid!!")
                     pass           
