@@ -23,6 +23,8 @@ from datetime import date, timedelta
 from pythainlp.util import normalize
 from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus import thai_stopwords
+
+
 ###CLASS####
 
 
@@ -31,7 +33,7 @@ class TweepyManager():
     def __init__(self):
         
         self.dtM = dataManager()
-        
+
         
         
     def connect(self):
@@ -112,7 +114,7 @@ class TweepyManager():
                 lang=lang,
                 tweet_mode="extended",
                 until=f"{until_date}",
-                result_type = 'recent').items(50)
+                result_type = 'recent').items(300)
 
             
             users_locs = []
@@ -302,6 +304,21 @@ class TweepyManager():
 
         return " ".join(re.sub("([^\u0E00-\u0E7Fa-zA-Z' ]|^'|'$|''|(\w+:\/\/\S+))", "", txt).split())
             
+    def remove_emoji(self,text):
+        return ''.join([c for c in text if c not in emoji.UNICODE_EMOJI])
+
+
+    def THStopword_new(self,text):
+        text = f"{text}"
+        list_word = word_tokenize(text)
+        
+
+
+        stopwords = list(thai_stopwords())
+        list_word_not_stopwords = [i for i in list_word if i not in stopwords]
+        
+
+        return list_word_not_stopwords
 
     def trending(self):
         api = self.connect()
@@ -340,18 +357,6 @@ class TweepyManager():
             print("CreteSubFolder Successed")
 
 
-    def remove_emoji(self,text):
-        return ''.join([c for c in text if c not in emoji.UNICODE_EMOJI])
 
 
-    def THStopword_new(self,text):
-        text = f"{text}"
-        list_word = word_tokenize(text)
-        
 
-
-        stopwords = list(thai_stopwords())
-        list_word_not_stopwords = [i for i in list_word if i not in stopwords]
-        
-
-        return list_word_not_stopwords
