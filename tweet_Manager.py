@@ -10,7 +10,7 @@ import nltk
 import pandas as pd
 # import matplotlib.pyplot as plt
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
@@ -19,7 +19,7 @@ from textblob import TextBlob
 from data import dataManager
 import datetime 
 from datetime import date, timedelta
-import emoji
+# import emoji 
 from pythainlp.util import normalize
 from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus import thai_stopwords
@@ -38,11 +38,12 @@ class TweepyManager():
         
     def connect(self):
     # Replace the xxxxx with your twitter api 
-        load_dotenv()
-        consumer_key= os.getenv('consumer_key')
-        consumer_secret= os.getenv('consumer_secret')
-        access_token= os.getenv('access_token')
-        access_token_secret= os.getenv('access_token_secret')
+        # load_dotenv()
+        
+        consumer_key= 'U2W3l42TgljNEJSHN5JBQgVkS'
+        consumer_secret= '4FhgqjPoYKefGjpMJxU0Dbu2rKZQ8q0EpMIaIOBcrcGPLkjBgX'
+        access_token= '874923301910573057-ko3H24qEm7caUT0QAe7q3z5SPlsCnXL'
+        access_token_secret= 'ZXj4hL6U0v5xIo8xOX6uf2Y32ybIGOIWOdFL1X3Z9O4Xq'
     
         
         try:
