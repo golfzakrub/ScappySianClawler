@@ -114,7 +114,7 @@ You should have Requirement before running the program
 
 ### Running the program
 
-We have 3 Tab for the whole program .we will start at Tab1 "Tweepy" 
+We have 3 Tab for the whole program.we will start at Tab1 "Tweepy" 
 
 ### TAB 1 TWEEPY
    
