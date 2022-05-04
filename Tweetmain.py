@@ -692,63 +692,66 @@ class Ui_mainWindow(object):
         self.progressBar_2.setProperty("value", 100)   
 
     def createTable_search_nodate(self,table_name):
-        if self.checkBox_2.isChecked() == False:
-            if self.checkBox.isChecked() == True: #With Date
-                # try:
-                filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
-                model_2 = pandasModel(filename)
-                proxyModel_2 = QSortFilterProxyModel()
-                proxyModel_2.setSourceModel(model_2)
-                table_name = self.tableView_4
-                table_name.setModel(proxyModel_2)
-                self.DB_TweetSentimentLabel(filename)
-                self.TWDB_RelateHashtag(filename)
-                return filename 
-                # except:
-                #     print("Keyword of Date Invalid!!")
-                #     pass
-      
-            else:
-                # try:
-                filename = self.sDB.tweet_search_no_date(table_name)
-                # filename = self.sDB.tweet_search_from_text()
-                model_2 = pandasModel(filename)
-                proxyModel_2 = QSortFilterProxyModel()
-                proxyModel_2.setSourceModel(model_2)
-                table_name = self.tableView_4
-                table_name.setModel(proxyModel_2)
-                self.DB_TweetSentimentLabel(filename)
-                self.TWDB_RelateHashtag(filename) 
-                print(type(filename))
-                return filename 
-                # except:
-                #     print("Keyword Invalid!!")
-                #     pass
+        try:
+            if self.checkBox_2.isChecked() == False:
+                if self.checkBox.isChecked() == True: #With Date
+                    # try:
+                    filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
+                    model_2 = pandasModel(filename)
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_4
+                    table_name.setModel(proxyModel_2)
+                    self.DB_TweetSentimentLabel(filename)
+                    self.TWDB_RelateHashtag(filename)
+                    return filename 
+                    # except:
+                    #     print("Keyword of Date Invalid!!")
+                    #     pass
+        
+                else:
+                    # try:
+                    filename = self.sDB.tweet_search_no_date(table_name)
+                    # filename = self.sDB.tweet_search_from_text()
+                    model_2 = pandasModel(filename)
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_4
+                    table_name.setModel(proxyModel_2)
+                    self.DB_TweetSentimentLabel(filename)
+                    self.TWDB_RelateHashtag(filename) 
+                    print(type(filename))
+                    return filename 
+                    # except:
+                    #     print("Keyword Invalid!!")
+                    #     pass
 
-        if self.checkBox_2.isChecked() == True:
-            if self.checkBox_3.isChecked() == True: #Web Key search
-                # try:
-                filename = self.sDB.Web_search_with_key(table_name)
-                model_2 = pandasModel(filename)
-                proxyModel_2 = QSortFilterProxyModel()
-                proxyModel_2.setSourceModel(model_2)
-                table_name = self.tableView_4
-                table_name.setModel(proxyModel_2)
-                self.Web_TweetSentimentLabel(filename)
-                return filename 
-                # except:
-                #     print("Keyword Invalid!!")
-                #     pass   
+            if self.checkBox_2.isChecked() == True:
+                if self.checkBox_3.isChecked() == True: #Web Key search
+                    # try:
+                    filename = self.sDB.Web_search_with_key(table_name)
+                    model_2 = pandasModel(filename)
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_4
+                    table_name.setModel(proxyModel_2)
+                    self.Web_TweetSentimentLabel(filename)
+                    return filename 
+                    # except:
+                    #     print("Keyword Invalid!!")
+                    #     pass   
+                else:
+                    filename = self.sDB.Web_search_no_date(table_name)
+                    model_2 = pandasModel(filename)
+                    proxyModel_2 = QSortFilterProxyModel()
+                    proxyModel_2.setSourceModel(model_2)
+                    table_name = self.tableView_4
+                    table_name.setModel(proxyModel_2)
+                    self.Web_TweetSentimentLabel(filename)
+                    return filename        
             else:
-                filename = self.sDB.Web_search_no_date(table_name)
-                model_2 = pandasModel(filename)
-                proxyModel_2 = QSortFilterProxyModel()
-                proxyModel_2.setSourceModel(model_2)
-                table_name = self.tableView_4
-                table_name.setModel(proxyModel_2)
-                self.Web_TweetSentimentLabel(filename)
-                return filename        
-        else:
+                print("Keyword Invalid!!")
+        except:
             print("Keyword Invalid!!")
           
     def TWRelateHashtag(self,filename):
