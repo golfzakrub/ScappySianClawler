@@ -67,15 +67,11 @@ SOFTWARE DEVELOPMENT PRACTICE II PROJECT
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#running-the-program">Running the program</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+        <li><a href="#tab-1-tweepy">TAB 1 TWEEPY</a></li>
+        <li><a href="#tab-2-web_crawler">TAB 2 WEB_CRAWLER</a></li>
+        <li><a href="#tab-3-database_s">TAB 3 DATABASE_S</a></li>
+        </ul>
+
   </ol>
 </details>
 
@@ -121,7 +117,9 @@ You should have Requirement before running the program
 ### Running the program
 
 We have 3 Tab for the whole program .we will start at Tab1 "Tweepy" 
-  
+
+### TAB 1 TWEEPY
+   
 ![image](https://user-images.githubusercontent.com/70587016/166665453-4b321d46-1721-4e18-95f3-c2db627e5ebb.png)
 
 **In first tab "Tweepy" have the 4 main content**
@@ -137,6 +135,9 @@ We have 3 Tab for the whole program .we will start at Tab1 "Tweepy"
   
 * **4. The Trending keyword**
 
+### TAB 2 WEB_CRAWLER
+  
+  
 ![image](https://user-images.githubusercontent.com/70587016/166667306-d804bf9f-addb-41b4-96a0-10bfe447d4cd.png)
 
 **In Second tab "Web_Crawler" have the 3 main content**
@@ -149,6 +150,10 @@ We have 3 Tab for the whole program .we will start at Tab1 "Tweepy"
 * **3. The data of relate word will display on this layer**
 
 ![image](https://user-images.githubusercontent.com/70587016/166668358-0ffdf2a6-7b56-4e34-be2e-57fd30097c48.png)
+  
+  
+### TAB 3 DATABASE_S
+  
 
 **In Third tab "Database_S" have the 4 main content**
 * **1. Insert Keyword**
