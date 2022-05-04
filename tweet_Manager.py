@@ -10,7 +10,7 @@ import nltk
 import pandas as pd
 # import matplotlib.pyplot as plt
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
@@ -19,11 +19,12 @@ from textblob import TextBlob
 from data import dataManager
 import datetime 
 from datetime import date, timedelta
-# import emoji 
+import emoji 
 from pythainlp.util import normalize
 from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus import thai_stopwords
 from collections import Counter
+import time
 
 ###CLASS####
 
@@ -38,12 +39,12 @@ class TweepyManager():
         
     def connect(self):
     # Replace the xxxxx with your twitter api 
-        # load_dotenv()
+        load_dotenv()
         
-        consumer_key= 'U2W3l42TgljNEJSHN5JBQgVkS'
-        consumer_secret= '4FhgqjPoYKefGjpMJxU0Dbu2rKZQ8q0EpMIaIOBcrcGPLkjBgX'
-        access_token= '874923301910573057-ko3H24qEm7caUT0QAe7q3z5SPlsCnXL'
-        access_token_secret= 'ZXj4hL6U0v5xIo8xOX6uf2Y32ybIGOIWOdFL1X3Z9O4Xq'
+        consumer_key= os.getenv('consumer_key')
+        consumer_secret= os.getenv('consumer_secret')
+        access_token= os.getenv('access_token')
+        access_token_secret= os.getenv('access_token_secret')
     
         
         try:
@@ -89,6 +90,7 @@ class TweepyManager():
         return " ".join(stem_sentence)
 
     def search_for_hashtags(self, hashtag_phrase,datetime):
+        time.sleep(5)
         api = self.connect()
         
         keyword = hashtag_phrase
@@ -140,6 +142,7 @@ class TweepyManager():
                         tweet.retweet_count,
                         len(TextBlob(self.stem(self.remove_url(self.cleanText((tweet.full_text))))).split(" ")),                        
                         count,
+                        tweet.favorite_count,
                         self.sentiment(TextBlob(self.stem(self.cleanText((tweet.full_text))))),
                         Relatehashtag,
                         tweet.user.followers_count,
@@ -147,7 +150,7 @@ class TweepyManager():
                     users_locs.append(locs)
                                 
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHashtag','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Favorite','Sentiment','RelateHashtag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
 
@@ -199,6 +202,7 @@ class TweepyManager():
                         tweet.retweet_count,
                         len(self.THStopword_new(self.remove_url_th(tweet.full_text))),
                         count,
+                        tweet.favorite_count,
                         tweet_sentiment,
                         Relatehashtag,
                         tweet.user.followers_count,
@@ -206,7 +210,7 @@ class TweepyManager():
                     users_locs.append(locs)
             print("finish")
             tweet_text = pd.DataFrame(data=users_locs, 
-                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Sentiment','RelateHashtag','Followers_count','tweet link'])
+                columns=['Hashtag','Username','Date','Tweet','retweet','Word_count','Key_word_count','Favorite','Sentiment','RelateHashtag','Followers_count','tweet link'])
             
             fname = hashtag_phrase
             

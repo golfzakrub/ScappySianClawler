@@ -456,6 +456,10 @@ class Ui_mainWindow(object):
         self.Search_4.setGeometry(QtCore.QRect(770,690, 75, 22))
         self.Search_4.setObjectName("Search_4")        
         self.Search_4.clicked.connect(lambda :self.save_data_as_csv())
+        self.Search_5 = QtWidgets.QPushButton(self.tab_3)
+        self.Search_5.setGeometry(QtCore.QRect(770,660, 75, 22))
+        self.Search_5.setObjectName("Search_5")        
+        self.Search_5.clicked.connect(lambda :self.TW_save_data_as_csv_use())
         self.tableView_4 = QtWidgets.QTableView(self.tab_3)
         self.tableView_4.setGeometry(QtCore.QRect(10, 170, 681, 551))
         self.tableView_4.setObjectName("tableView_4")
@@ -531,7 +535,8 @@ class Ui_mainWindow(object):
         self.label_8.setText(_translate("mainWindow", "To"))
         self.dateEdit_3.setDisplayFormat(_translate("mainWindow", "yyyy-MM-dd"))
         self.Search_3.setText(_translate("mainWindow", "Search"))
-        self.Search_4.setText(_translate("mainWindow", "Export"))
+        self.Search_4.setText(_translate("mainWindow", "Export All"))
+        self.Search_5.setText(_translate("mainWindow", "Export Use"))
         self.checkBox_2.setText(_translate("mainWindow", "Web Search"))
         self.checkBox_3.setText(_translate("mainWindow", "Web(keyword)"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
@@ -785,6 +790,29 @@ class Ui_mainWindow(object):
                     df.to_csv(response[0], index=False)
         except Exception:
             print("NO FILE TO EXPORT")
+
+
+    def TW_save_data_as_csv_use(self):
+        
+        try:    
+            self.file = self.createTable_search_nodate(self.textEdit_4.toPlainText())
+            list_use = ['Hashtag','Username','Date','retweet','Key_word_count','Favorite','Sentiment']
+            self.file = self.file[list_use]
+            file_filter = '"Excel or CSV(*.csv ,*.xls ,*.xlsx ,*.xlsm)'
+            response = QtWidgets.QFileDialog.getSaveFileName(
+                caption='Export file',
+                filter=file_filter,
+                initialFilter='"Excel or CSV(*.csv ,*.xls ,*.xlsx ,*.xlsm)'
+            )
+            
+            if not self.file.empty:
+                df = self.file
+                if response[0] != '':
+                    df.to_csv(response[0], index=False)
+        except Exception:
+            print("NO FILE TO EXPORT")
+
+
 
 if __name__ == "__main__":
     import sys
