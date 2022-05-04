@@ -148,11 +148,10 @@ We have 3 Tab for the whole program .we will start at Tab1 "Tweepy"
 * **2. The data will display on this layer**
 
 * **3. The data of relate word will display on this layer**
-
-![image](https://user-images.githubusercontent.com/70587016/166668358-0ffdf2a6-7b56-4e34-be2e-57fd30097c48.png)
-  
-  
 ### TAB 3 DATABASE_S
+  
+  
+![image](https://user-images.githubusercontent.com/70587016/166668358-0ffdf2a6-7b56-4e34-be2e-57fd30097c48.png)
   
 
 **In Third tab "Database_S" have the 4 main content**
