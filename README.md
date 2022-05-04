@@ -65,6 +65,7 @@ SOFTWARE DEVELOPMENT PRACTICE II PROJECT
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#uml-class-diagram">UML Class diagram</a></li>
         <li><a href="#tab-1-tweepy">TAB 1 TWEEPY</a></li>
         <li><a href="#tab-2-web_crawler">TAB 2 WEB_CRAWLER</a></li>
         <li><a href="#tab-3-database_s">TAB 3 DATABASE_S</a></li>
@@ -108,6 +109,11 @@ Hello This is our Project for SOFTWARE DEVELOPMENT PRACTICE II about tweepy and 
 
 The Main application we use is "Tweetmain.py"
 
+### UML Class diagram
+  
+  ![My First Board - Frame 1](https://user-images.githubusercontent.com/70587016/166745839-ae5dd836-ee40-4967-b9e8-3983dd807789.jpg)
+
+  
 ### Prerequisites
 
 You should have Requirement before running the program
