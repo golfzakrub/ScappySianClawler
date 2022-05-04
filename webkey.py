@@ -33,7 +33,8 @@ class KEY_MANAGER():
             for k in range(len(all_files)):
                 list_all_files.append(all_files[k])
         list_df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0).assign(Keyword = keyword) for f in list_all_files),ignore_index = True)   
-        
+        if "sentiment" in list_df:
+            list_df.pop("sentiment")
         list_num_drop = []
         list_word_count = ["Count-keyword"]
         num = 0

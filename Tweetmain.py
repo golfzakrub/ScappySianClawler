@@ -474,7 +474,7 @@ class Ui_mainWindow(object):
         self.checkBox_3.setGeometry(QtCore.QRect(240, 20, 101, 21))
         self.checkBox_3.setObjectName("checkBox_3")
         self.tableView_6 = QtWidgets.QTableView(self.tab_3)
-        self.tableView_6.setGeometry(QtCore.QRect(700, 170, 221, 261))
+        self.tableView_6.setGeometry(QtCore.QRect(700, 170, 221, 421))
         self.tableView_6.setObjectName("tableView_6")
         self.label_9 = QtWidgets.QLabel(self.tab)
         self.label_9.setGeometry(QtCore.QRect(10, 130, 681, 16))
@@ -542,7 +542,7 @@ class Ui_mainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
         self.label_9.setText(_translate("mainWindow", "Sentiment = Positive,Negative,Neutral"))
         self.label_10.setText(_translate("mainWindow", "Sentiment = Positive,Negative,Neutral"))
-        self.label_11.setText(_translate("mainWindow", "Relate Hashtag(for tweet)"))
+        self.label_11.setText(_translate("mainWindow", "Relate Keyword"))
         self.label_12.setText(_translate("mainWindow", "Relate Hashtag"))
         self.label_13.setText(_translate("mainWindow", "Sentiment = Positive,Negative,Neutral"))
         self.label_14.setText(_translate("mainWindow", "Relate Word"))
@@ -693,7 +693,7 @@ class Ui_mainWindow(object):
 
     def createTable_search_nodate(self,table_name):
         try:
-            if self.checkBox_2.isChecked() == False:
+            if self.checkBox_2.isChecked() == False: ##Twitter
                 if self.checkBox.isChecked() == True: #With Date
                     # try:
                     filename = self.sDB.tweet_search_with_date(table_name,self.dateEdit_2.text(),self.dateEdit_3.text())
@@ -726,17 +726,25 @@ class Ui_mainWindow(object):
                     #     print("Keyword Invalid!!")
                     #     pass
 
-            if self.checkBox_2.isChecked() == True:
+            if self.checkBox_2.isChecked() == True: #Web
                 if self.checkBox_3.isChecked() == True: #Web Key search
                     # try:
                     filename = self.sDB.Web_search_with_key(table_name)
+                    name = table_name.lower()
                     model_2 = pandasModel(filename)
                     proxyModel_2 = QSortFilterProxyModel()
                     proxyModel_2.setSourceModel(model_2)
                     table_name = self.tableView_4
                     table_name.setModel(proxyModel_2)
                     self.Web_TweetSentimentLabel(filename)
+
+                    model_3 = pandasModel(self.dtM.readData(f"./DataRelate/{name}.csv"))
+                    proxyModel_3 = QSortFilterProxyModel()
+                    proxyModel_3.setSourceModel(model_3)
+                    table_name = self.tableView_6
+                    table_name.setModel(proxyModel_3)    
                     return filename 
+                    
                     # except:
                     #     print("Keyword Invalid!!")
                     #     pass   
