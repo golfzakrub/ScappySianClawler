@@ -36,7 +36,7 @@ SOFTWARE DEVELOPMENT PRACTICE II PROJECT
 <h3 align="center">project_title</h3>
 
   <p align="center">
-    project_description
+    **This Project is for educational purposes**
     <br />
     <a href="https://github.com/golfzakrub/ScappySianClawler"><strong>Explore the docs »</strong></a>
     <br />
