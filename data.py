@@ -23,3 +23,8 @@ class dataManager():
         print("read file finished")
         return self.all_data
 
+    def readData2(self,filename):
+        self.all_data = pd.read_csv(filename,encoding = 'utf-8').dropna()
+
+        print("read file finished")
+        return self.all_data        

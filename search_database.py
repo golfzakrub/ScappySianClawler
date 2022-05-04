@@ -66,7 +66,7 @@ class search_database():
 
     def Web_search_with_key(self,keyword):
         all_files = glob.glob(f"DataKeyword/{keyword}.csv")
-        df = pd.concat((pd.read_csv(f,encoding = 'utf-8',index_col=0) for f in all_files))
+        df = pd.concat((pd.read_csv(f,encoding = 'utf-8') for f in all_files))
 
         return df
 
@@ -87,5 +87,6 @@ class search_database():
             locs = [item[0],item[1]]
             count_word_list.append(locs)
         df = pd.DataFrame(data=count_word_list,columns=['Hashtag','count'])
+        
 
         return df
