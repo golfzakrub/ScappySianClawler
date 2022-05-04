@@ -1,11 +1,13 @@
 import os
 import csv
 import glob
+import re
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from string import punctuation
 from operator import itemgetter
+
 class KEY_MANAGER():
     
     def __init__(self):
@@ -63,92 +65,99 @@ class KEY_MANAGER():
         ## nlp
         Keyword = keyword.lower()
         raw_word = self.raw_word
-        # print(raw_word,"sss")
-        stop_words = set(stopwords.words('english'))
-        word_tokens = word_tokenize(raw_word.lower())        
-        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-        # filtered_sentence_word = ""
-        filtered_sentence = []
-        stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","THE","The","i","I","s","a",'','"','"',"<",">",":","[","]", 'about', 'above', 'across', 'after', 'afterwards', 'again',
-        'against', 'all', 'almost', 'alone', 'along', 'already', 'also',
-        'although', 'always', 'am', 'among', 'amongst', 'amount', 'an',
-        'and', 'another', 'any', 'anyhow', 'anyone', 'anything', 'anyway',
-        'anywhere', 'are', 'around', 'as', 'at', 'back', 'be', 'became',
-        'because', 'become', 'becomes', 'becoming', 'been', 'before',
-        'beforehand', 'behind', 'being', 'below', 'beside', 'besides',
-        'between', 'beyond', 'both', 'bottom', 'but', 'by', 'call', 'can',
-        'cannot', 'could', 'do', 'done', 'down', 'due', 'during', 'each',
-        'eight', 'either', 'eleven', 'else', 'elsewhere', 'empty',
-        'enough', 'even', 'ever', 'every', 'everyone', 'everything',
-        'everywhere', 'except', 'few', 'fifteen', 'fifty', 'first', 'five',
-        'for', 'former', 'formerly', 'forty', 'four', 'from', 'front',
-        'full', 'further', 'get', 'give', 'go', 'had', 'has', 'have', 'he',
-        'hence', 'her', 'here', 'hereafter', 'hereby', 'herein',
-        'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how',
-        'however', 'hundred', 'i', 'if', 'in', 'indeed', 'into', 'is',
-        'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly',
-        'least', 'less', 'made', 'many', 'may', 'me', 'meanwhile', 'might',
-        'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much',
-        'must', 'my', 'myself', 'name', 'namely', 'neither', 'never',
-        'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone',
-        'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often',
-        'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others',
-        'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
-        'part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same',
-        'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several',
-        'she', 'should', 'show', 'side', 'since', 'six', 'sixty', 'so',
-        'some', 'somehow', 'someone', 'something', 'sometime', 'sometimes',
-        'somewhere', 'still', 'such', 'take', 'ten', 'than', 'that', 'the',
-        'their', 'them', 'themselves', 'then', 'thence', 'there',
-        'thereafter', 'thereby', 'therefore', 'therein', 'thereupon',
-        'these', 'they', 'third', 'this', 'those', 'though', 'three',
-        'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too',
-        'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'under',
-        'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well',
-        'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where',
-        'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon',
-        'wherever', 'whether', 'which', 'while', 'whither', 'who',
-        'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with',
-        'within', 'without', 'would', 'yet', 'you', 'your', 'yours',
-        'yourself', 'yourselves',"'",'"','“','’','”',"–"]
         
-        stop_word_more.append(str(Keyword))
-        ## nlp
-        for w in word_tokens:
-            if w not in stop_words:        
-                if w not in stop_word_more:      
-                    # filtered_sentence_word += w +" "     
-                    filtered_sentence.append(w)
-        # print(filtered_sentence,"fs")
-        ##
-        ### top word
-        N = 10
-        words = {}
-
-        words_gen = (wordg.strip(punctuation).lower() for line in filtered_sentence
-                                           for wordg in line.split())
-
-        for wordg in words_gen:
-            words[wordg] = words.get(wordg, 0) + 1
-
-        top_words = sorted(words.items(), key=itemgetter(1), reverse=True)[:N]
+        checklang = re.compile(r'[a-zA-Z]')
         
-        ##
-        self.data=[]
-        # print(top_words,"top")
-        for i, (word, frequency) in enumerate(top_words, start=1):
-            self.data.append([i,word,frequency])  
-            
-        html_text = pd.DataFrame(data=self.data, 
-                    columns=["Rank","Word","Frequency"])   
-        
-        if not os.path.exists(f'./DataRelate'):                    
-            os.mkdir(f'./DataRelate')  
-            print("CreteFolder Successed")
-                 
-        open(f"./DataRelate/"+f"{Keyword}"+".csv","w")
-        html_text.to_csv(f"./DataRelate/"+f"{Keyword}"+".csv")    
-    
+        if raw_word != "":
+            if not checklang.match(raw_word):
+                print("No Related thai word")
+                pass
+            else:
+                # print(raw_word,"sss")
+                stop_words = set(stopwords.words('english'))
+                word_tokens = word_tokenize(raw_word.lower())        
+                filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+                # filtered_sentence_word = ""
+                filtered_sentence = []
+                stop_word_more = ["#","@","!","+","=","_","-",".",",","","'s","An","*","(",")","?","``","''","`","'",".","©","the","an","THE","The","i","I","s","a",'','"','"',"<",">",":","[","]", 'about', 'above', 'across', 'after', 'afterwards', 'again',
+                'against', 'all', 'almost', 'alone', 'along', 'already', 'also',
+                'although', 'always', 'am', 'among', 'amongst', 'amount', 'an',
+                'and', 'another', 'any', 'anyhow', 'anyone', 'anything', 'anyway',
+                'anywhere', 'are', 'around', 'as', 'at', 'back', 'be', 'became',
+                'because', 'become', 'becomes', 'becoming', 'been', 'before',
+                'beforehand', 'behind', 'being', 'below', 'beside', 'besides',
+                'between', 'beyond', 'both', 'bottom', 'but', 'by', 'call', 'can',
+                'cannot', 'could', 'do', 'done', 'down', 'due', 'during', 'each',
+                'eight', 'either', 'eleven', 'else', 'elsewhere', 'empty',
+                'enough', 'even', 'ever', 'every', 'everyone', 'everything',
+                'everywhere', 'except', 'few', 'fifteen', 'fifty', 'first', 'five',
+                'for', 'former', 'formerly', 'forty', 'four', 'from', 'front',
+                'full', 'further', 'get', 'give', 'go', 'had', 'has', 'have', 'he',
+                'hence', 'her', 'here', 'hereafter', 'hereby', 'herein',
+                'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how',
+                'however', 'hundred', 'i', 'if', 'in', 'indeed', 'into', 'is',
+                'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly',
+                'least', 'less', 'made', 'many', 'may', 'me', 'meanwhile', 'might',
+                'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much',
+                'must', 'my', 'myself', 'name', 'namely', 'neither', 'never',
+                'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone',
+                'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often',
+                'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others',
+                'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
+                'part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same',
+                'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several',
+                'she', 'should', 'show', 'side', 'since', 'six', 'sixty', 'so',
+                'some', 'somehow', 'someone', 'something', 'sometime', 'sometimes',
+                'somewhere', 'still', 'such', 'take', 'ten', 'than', 'that', 'the',
+                'their', 'them', 'themselves', 'then', 'thence', 'there',
+                'thereafter', 'thereby', 'therefore', 'therein', 'thereupon',
+                'these', 'they', 'third', 'this', 'those', 'though', 'three',
+                'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too',
+                'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'under',
+                'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well',
+                'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where',
+                'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon',
+                'wherever', 'whether', 'which', 'while', 'whither', 'who',
+                'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with',
+                'within', 'without', 'would', 'yet', 'you', 'your', 'yours',
+                'yourself', 'yourselves',"'",'"','“','’','”',"–","‘"]
+                
+                stop_word_more.append(str(Keyword))
+                ## nlp
+                for w in word_tokens:
+                    if w not in stop_words:        
+                        if w not in stop_word_more:      
+                            # filtered_sentence_word += w +" "     
+                            filtered_sentence.append(w)
+                # print(filtered_sentence,"fs")
+                ##
+                ### top word
+                N = 10
+                words = {}
+
+                words_gen = (wordg.strip(punctuation).lower() for line in filtered_sentence
+                                                for wordg in line.split())
+
+                for wordg in words_gen:
+                    words[wordg] = words.get(wordg, 0) + 1
+
+                top_words = sorted(words.items(), key=itemgetter(1), reverse=True)[:N]
+                
+                ##
+                self.data=[]
+                # print(top_words,"top")
+                for i, (word, frequency) in enumerate(top_words, start=1):
+                    self.data.append([i,word,frequency])  
+                    
+                html_text = pd.DataFrame(data=self.data, 
+                            columns=["Rank","Word","Frequency"])   
+                
+                if not os.path.exists(f'./DataRelate'):                    
+                    os.mkdir(f'./DataRelate')  
+                    print("CreteFolder Successed")
+                        
+                open(f"./DataRelate/"+f"{Keyword}"+".csv","w")
+                html_text.to_csv(f"./DataRelate/"+f"{Keyword}"+".csv")       
 
     
     def start_scan(self,keyword):
