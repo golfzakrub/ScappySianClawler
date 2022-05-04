@@ -662,11 +662,12 @@ class Ui_mainWindow(object):
             table_name = self.tableView_3
             table_name.setModel(proxyModel_2)        
 
-            model_3 = pandasModel(self.dtM.readData(f"./DataRelate/{filename}.csv"))
-            proxyModel_3 = QSortFilterProxyModel()
-            proxyModel_3.setSourceModel(model_3)
-            table_name = self.tableView_8
-            table_name.setModel(proxyModel_3)     
+            if os.path.exists(f"./DataRelate/{filename}.csv"):                                
+                model_3 = pandasModel(self.dtM.readData(f"./DataRelate/{filename}.csv"))
+                proxyModel_3 = QSortFilterProxyModel()
+                proxyModel_3.setSourceModel(model_3)
+                table_name = self.tableView_8
+                table_name.setModel(proxyModel_3)       
                     
             filename = self.sDB.Web_search_with_key(keyword)
             
