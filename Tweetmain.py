@@ -460,6 +460,10 @@ class Ui_mainWindow(object):
         self.Search_5.setGeometry(QtCore.QRect(770,660, 75, 22))
         self.Search_5.setObjectName("Search_5")        
         self.Search_5.clicked.connect(lambda :self.TW_save_data_as_csv_use())
+        self.Search_6 = QtWidgets.QPushButton(self.tab_3)
+        self.Search_6.setGeometry(QtCore.QRect(770,610, 75, 22))
+        self.Search_6.setObjectName("Search_5")        
+        self.Search_6.clicked.connect(lambda :self.Related_save_data_as_csv())
         self.tableView_4 = QtWidgets.QTableView(self.tab_3)
         self.tableView_4.setGeometry(QtCore.QRect(10, 170, 681, 551))
         self.tableView_4.setObjectName("tableView_4")
@@ -537,6 +541,7 @@ class Ui_mainWindow(object):
         self.Search_3.setText(_translate("mainWindow", "Search"))
         self.Search_4.setText(_translate("mainWindow", "Export All"))
         self.Search_5.setText(_translate("mainWindow", "Export Use"))
+        self.Search_6.setText(_translate("mainWindow", "Export Related"))
         self.checkBox_2.setText(_translate("mainWindow", "Web Search"))
         self.checkBox_3.setText(_translate("mainWindow", "Web(keyword)"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("mainWindow", "Database_S"))
@@ -824,7 +829,24 @@ class Ui_mainWindow(object):
         except Exception:
             print("NO FILE TO EXPORT")
 
-
+    def Related_save_data_as_csv(self):
+        
+        try:    
+            self.file = self.createTable_search_nodate(self.textEdit_4.toPlainText())
+            self.file = self.sDB.DBRelateHashtag(self.file)
+            file_filter = '"Excel or CSV(*.csv ,*.xls ,*.xlsx ,*.xlsm)'
+            response = QtWidgets.QFileDialog.getSaveFileName(
+                caption='Export file',
+                filter=file_filter,
+                initialFilter='"Excel or CSV(*.csv ,*.xls ,*.xlsx ,*.xlsm)'
+            )
+            
+            if not self.file.empty:
+                df = self.file
+                if response[0] != '':
+                    df.to_csv(response[0], index=False)
+        except Exception:
+            print("NO FILE TO EXPORT")
 
 if __name__ == "__main__":
     import sys
