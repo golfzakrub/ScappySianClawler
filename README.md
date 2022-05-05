@@ -111,7 +111,8 @@ The Main application we use is "Tweetmain.py"
 
 ### UML Class diagram
   
-  ![My First Board - Frame 1](https://user-images.githubusercontent.com/70587016/166745839-ae5dd836-ee40-4967-b9e8-3983dd807789.jpg)
+![My First Board - Frame 2](https://user-images.githubusercontent.com/70587016/166874710-98a15b15-d7b2-483e-bdf4-d0a7839a44fd.jpg)
+
 
   
 ### Prerequisites
