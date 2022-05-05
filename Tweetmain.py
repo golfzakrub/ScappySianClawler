@@ -609,13 +609,8 @@ class Ui_mainWindow(object):
             self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
             self.label_13.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw}) , Neutral {neutral} %({neutral_raw})")
         except:
-            
-            maxcol = positive_raw+negative_raw
-            positive = float("{:.2f}".format(positive_raw/maxcol*100))        
-            negative = float("{:.2f}".format(negative_raw/maxcol*100))
+            print("Not in Database")
 
-            self.label_10.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw})")
-            self.label_13.setText(f"Sentiment({maxcol}) = Positive {positive} %({positive_raw}) , Negative {negative} %({negative_raw})")
 
 
     def DB_TweetSentimentLabel(self,filename):        
