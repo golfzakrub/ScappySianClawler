@@ -37,11 +37,11 @@ class TweepyManager():
 
         
         
-    def connect(self):
-    # Replace the xxxxx with your twitter api 
+    def connect(self): #You need to have .env file
+    
         load_dotenv()
         
-        consumer_key= os.getenv('consumer_key')
+        consumer_key= os.getenv('consumer_key') 
         consumer_secret= os.getenv('consumer_secret')
         access_token= os.getenv('access_token')
         access_token_secret= os.getenv('access_token_secret')
